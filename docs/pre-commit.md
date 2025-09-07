@@ -77,11 +77,4 @@ pre-commit run --all-files
 
 ## auto
 
-### .git/hooks/pre-commit
-
-````bash
-#!/bin/sh
-cargo fmt -- --check
-cargo clippy -- -D warnings
-```
-````
+auto trigger during `git commit`
