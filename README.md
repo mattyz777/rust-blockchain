@@ -1,1 +1,3 @@
-# rust-blockchain
+- init-project
+- pre-commit
+-
