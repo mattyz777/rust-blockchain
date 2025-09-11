@@ -1,0 +1,5 @@
+[workspace]
+members = [
+    "matt_app",
+    "matt_lib"
+]
