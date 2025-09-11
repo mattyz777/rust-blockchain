@@ -106,3 +106,30 @@ pub fn hello() {
 	println!("2018::foo::b");
 }
 ```
+
+# import module
+
+```
+proj_crm/
+├── Cargo.toml             <-- workspace
+├── crm_lib/
+│   ├── Cargo.toml         <-- [package] name = "crm_lib"
+│   └── src/
+│       ├── lib.rs         <-- pub mod contact;
+│       └── contact/
+│           ├── contact.rs <-- use crate::contact::tag::Tag;
+│           ├── mod.rs     <-- pub mod tag;
+│           └── tag.rs     <-- pub struct Tag;
+└── crm_app/
+    ├── Cargo.toml         <-- depends on crm_lib
+    └── src/main.rs        <-- use crm_lib::contact::tag::Tag;
+```
+
+```rust
+// Within the same crate, "crate::"
+use crate::contact::tag::Tag;
+
+
+// From a different crates, "crm_lib"
+use crm_lib::contact::tag::Tag;
+```
