@@ -45,7 +45,8 @@ let s1 = String::from("aa");
 let s2 = "aa".to_string();
 let s3 = "aa".to_owned();
 let s3: String = "aa".into(); // Needs type annotation (or inference).
-let s4 = format!("hi {}", "aa");
+let s4: String = s1.clone(); // String clone, s4 has the ownership
+let s5 = format!("hi {}", "aa");
 ```
 
 # String comparisons are by value(content) not by memory address
@@ -63,20 +64,15 @@ println!("s1 equals s2 {} equals s3 {} equals s4 {}", s1==s2, s2==s3, s3==s4)
 
 no matter String or &str or &String
 
-- stack address is `&variable`
-- heap address is `variable.as_ptr()`
+- text content is `variable` with `println!("{}")`
+- stack address is `&variable` with `println!("{:p}")`
+- heap address is `variable.as_ptr()` with `println!("{:p}")`
 
 ```rust
-let slice1:&str = "aa";
-let s1:String = String::from("aa");
-
-// get addresses for String
-println!("stack address of s variable is {:p}", &s1);
-println!("heap  address of `aa` data content is {:p}", s1.as_ptr());
-
-// get addresses for string literal
-println!("stack address: {:p}", &slice1);
-println!("heap  address: {:p}", slice1.as_ptr());
+let n2: &str = "aa";
+println!("{}", n2);  // Uses Display implementation for &str to print the text content of the slice
+println!("{:p}", n2); // address of the string data on heap
+println!("{:p}", &n2); // address of the reference variable on stack
 ```
 
 # ownership
@@ -91,4 +87,15 @@ println!("heap  address: {:p}", slice1.as_ptr());
   // `s` and `owner` go out of scope
   // Rust automatically calls `drop` for both
   // Heap memory is freed safely
+```
+
+# String concatenation
+
+## String clone
+
+```rust
+// both n1 and n2 have the ownership
+let n1:String = "hello".to_string();
+let n2 = n1.clone() + " world"; // hello world
+println!("{}", n2);
 ```
