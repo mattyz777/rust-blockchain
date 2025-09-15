@@ -26,14 +26,14 @@ fn main() {
     println!("v_cloned: {:?}", v_cloned);
 
     // 4. iter_mut(): mutable borrow for modification
-    for s in v.iter_mut() {
+    for s:(&mut String) in v.iter_mut() {
         s.push_str("!!!");
     }
     println!("v after iter_mut: {:?}", v);
 
     // 5. into_iter(): consumes the vector and moves ownership
     //    v is no longer usable
-    let v2 = v.into_iter().collect::<Vec<String>>();
+    let v2:Vec<String> = v.into_iter().collect::<Vec<String>>();
     println!("v2: {:?}", v2);
 
 }

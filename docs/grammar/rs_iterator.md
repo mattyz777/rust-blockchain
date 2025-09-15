@@ -1,20 +1,15 @@
 # design
 
-- `iter()` trait of `Vec<T>` creates an iterator over references: `Iterator<Item = &T>`
-  - `vec.inter()`
-  - Avoids copying or moving elements from the vector unless you explicitly want to.
-- ## `next()` method of Iterator trait, which Vec implements, returns an `Option<Item>`
-
-```rust
-trait Iterator {
-    type Item;
-    fn next(&mut self) -> Option<Self::Item>;
-}
-```
+- `iter()` is a method defined on `Vec<T>`
+- `iter()` returns a concrete type (usually written as `std::slice::Iter<'_, T>`) which implements the Iterator trait.
+- Each call to next() on it yields an `Option<&T>` — a reference to the element.
+- Avoids copying or moving elements from the vector unless you explicitly want to.
 
 ```rust
 let v = vec![1, 2, 3];
-let mut iter = v.iter(); // creates an iterator over &i32
+// creates an iterator over &i32
+// iter type is "std::slice::Iter<'_, T>"
+let mut iter = v.iter();
 
 assert_eq!(iter.next(), Some(&1));
 assert_eq!(iter.next(), Some(&2));

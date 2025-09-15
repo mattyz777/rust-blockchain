@@ -1,7 +1,5 @@
 # struct
 
-only defines data
-
 ```rust
 struct Person {
     name: String;  // struct owns the data
@@ -243,4 +241,20 @@ impl Communicate for Person {}
 // run
 let p = Person { name: "Alice".into() };
 p.communicate();
+```
+
+# trait bound
+
+sort of restriction on generic types, the generic type must implement specified traits
+
+```rust
+// where trait bounds
+fn compare_and_print<T>(a: T, b: T)
+where T: std::fmt::Debug + PartialOrd,
+{
+    // ...
+}
+
+// inline trait bounds
+fn compare_and_print<T: std::fmt::Debug + PartialOrd>(a: T, b: T) {}
 ```

@@ -8,12 +8,12 @@ When running cargo build, Cargo compiles one or more crates. Each crate produces
 
 - binary crate
 
-  - Must have a main function
   - By convention, the entry point is src/main.rs.
+  - Must have a main function
 
 - library crate
-  - Don't have a main function.
   - By convention, the entry point is src/lib.rs.
+  - No main function
 
 # creating rust project
 

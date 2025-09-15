@@ -1,12 +1,11 @@
 # `{}` and `{:?}`
 
-- `{}` → calls fmt from `Display`, custom struct doesn't implement `Display` by default, so should use `[derive[Debug]]`
-- `{:?}` `{:#?}` → calls fmt from `Debug`
+- `{}` → calls fmt method from `Display` trait, custom struct doesn't implement `Display` by default
+- `{:?}` `{:#?}` → relies on `Debug` trait
 
 # Display
 
 - defined in `std::fmt::Display`
-- struct cannot use `{}` since it requires `Display`
 
 ```rust
 let p = Point { x: 3, y: 4 };

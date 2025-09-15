@@ -1,6 +1,8 @@
-# types
+# scalar types
 
-default types are `i32` & `f64`
+- default types are `i32` & `f64`
+- integer, float, boolean, char
+- A scalar value is stored wherever its variable is stored.
 
 | Type  | Bits           | Bytes          | Default | Example                |
 | ----- | -------------- | -------------- | ------- | ---------------------- |
@@ -12,12 +14,20 @@ default types are `i32` & `f64`
 | isize | pointer size\* | pointer size\* |         | `let x: isize = -42;`  |
 | f32   | 32             | 4              |         | `let x: f32 = 3.14;`   |
 | f64   | 64             | 8              | yes     | `let x: f64 = 3.1415;` |
+| bool  | 8              | 1              |         | `let x: bool = true;`  |
+| char  | 32             | 4              |         | `let x: char = 'A';`   |
 | u8    | 8              | 1              |         | `let x: u8 = 42;`      |
 | u16   | 16             | 2              |         | `let x: u16 = 42;`     |
 | u32   | 32             | 4              |         | `let x: u32 = 42;`     |
 | u64   | 64             | 8              |         | `let x: u64 = 42;`     |
 | u128  | 128            | 16             |         | `let x: u128 = 42;`    |
 | usize | pointer size\* | pointer size\* |         | `let x: usize = 42;`   |
+
+# primitive Types
+
+It includes all `scalar types` and `compound types`.
+
+- Compound types: `Tuple`, `Array`
 
 # precision
 

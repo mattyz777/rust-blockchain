@@ -40,11 +40,15 @@ let slice4: &str = s1.as_str();
 
 # how to create String
 
+- `to_string` requires trait `Display`
+- `to_owned` requires trait `Clone`
+- `into` requires trait `From<T>`
+
 ```rust
 let s1 = String::from("aa");
 let s2 = "aa".to_string();
 let s3 = "aa".to_owned();
-let s3: String = "aa".into(); // Needs type annotation (or inference).
+let s3: String = "aa".into(); // &str to String
 let s4: String = s1.clone(); // String clone, s4 has the ownership
 let s5 = format!("hi {}", "aa");
 ```
@@ -84,7 +88,7 @@ println!("{:p}", &n2); // address of the reference variable on stack
 	let mut s = String::from("hi");  // mutable String
 	s.push_str(", world!");
 } // Scope ends here
-  // `s` and `owner` go out of scope
+  // both `s` and `owner` go out of scope
   // Rust automatically calls `drop` for both
   // Heap memory is freed safely
 ```
