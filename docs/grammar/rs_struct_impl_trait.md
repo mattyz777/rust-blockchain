@@ -226,8 +226,9 @@ fn interact<T: Greet + Farewell>(x: &T) {
 let p = Person { name: "Alice".into() };
 interact(&p);
 
-
+//----------------------------------------
 // super-trait
+//----------------------------------------
 trait Communicate: Greet + Farewell {
     fn communicate(&self) {
         println!("{}", self.greet());

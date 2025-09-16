@@ -36,3 +36,57 @@ fn main() {
     user.set_username("john_doe".to_string());
     println!("{:?}", user);
 }
+
+
+
+struct Person {
+    name: String,
+}
+
+// traits
+trait Greet {
+    fn greet(&self) -> String;
+}
+
+trait Farewell {
+    fn goodbye(&self) -> String;
+}
+
+// impl
+impl Greet for Person {
+    fn greet(&self) -> String {
+        format!("Hello, {}!", self.name)
+    }
+}
+
+impl Farewell for Person {
+    fn goodbye(&self) -> String {
+        format!("Goodbye, {}!", self.name)
+    }
+}
+
+// Use multiple traits via generic bounds
+fn interact<T: Greet + Farewell>(x: &T) {
+    println!("{}", x.greet());
+    println!("{}", x.goodbye());
+}
+
+// run
+let p = Person { name: "Alice".into() };
+interact(&p);
+
+
+// super-trait
+trait Communicate: Greet + Farewell {
+    fn communicate(&self) {
+        println!("{}", self.greet());
+        println!("{}", self.goodbye());
+    }
+}
+
+// impl super-trait
+impl Communicate for Person {}
+
+// run
+let p = Person { name: "Alice".into() };
+p.communicate();
