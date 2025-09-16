@@ -1,3 +1,21 @@
+# add dependency
+
+## manually
+
+```toml
+[package]
+...
+
+[dependencies]
+clap = { version = "4.5.47", features = ["derive"] }
+```
+
+## cargo
+
+```bash
+cargo add clap --features=derive
+```
+
 # dependencies
 
 | name       | 说明                                  |
