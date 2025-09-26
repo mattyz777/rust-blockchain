@@ -27,10 +27,29 @@ let name:&str = "aa";
 - growable → append, push.
 - Owned → responsible for freeing memory when dropped (goes out of scope).
 
-# how to create string literal
+```rust
+let s1:String = String::new();
+let s2:String = String::from("aa"); // convert string literal to String
+let s3:String = s1.clone(); // String clone, A new String is created on the heap.
+let s4:String = "aa".to_string();
+let s5:String = "aa".to_owned();
+let s6:String = "aa".into(); // &str into, A new String is created on the heap.
+let s7:String = format!("{}", "aa"); // format macro allocates a new String on the heap
+```
+
+# to_string
+
+```rs
+2.to_string();  // number
+true.to_string(); // boolean
+"aa".to_string(); // string literal
+
+```
+
+# string literal
 
 ```rust
-let s1:String = String::from("bb"); // data preparation
+let s1:String = String::from("bb");
 
 let slice1:&str = "aa";
 let slice2:&str = &s1;    //Borrow as &str, slice2[2..4] works

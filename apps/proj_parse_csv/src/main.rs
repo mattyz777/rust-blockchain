@@ -46,32 +46,60 @@
  *       use crate::opts;  // ❌ (no opts in this crate)
  * 
  **/
-use clap::Parser;
-use csv::Reader;
+// use clap::Parser;
+// use csv::Reader;
 // use crate::opts::{Opts, SubCommand, Record}; // not working
-use rcli::opts::{Opts, SubCommand, Record};
+// use rcli::opts::{Opts, SubCommand, Record};
+use std::fmt;
 
 fn main() {
-    println!("Hello, world!");
-    let opts: Opts = Opts::parse();
-    println!("{:?}", opts);
-    let mut r = Vec::<Record>::new();
-    match opts.cmd {
-        SubCommand::Csv(opts) => {
-            println!("{:?}", opts);
-            let mut reader = Reader::from_path(opts.input).unwrap();
-            
-            // collection and panic on error
-            // let records = reader
-            //     .deserialize()
-            //     .map(|record| record.unwrap())
-            //     .collect::<Vec<Record>>();
+    // fn test1() -> &'static str {
+    //     let s1:String = String::from("hello");
+    //     return &s1; // returns a reference to data owned by the current function
+    // }
 
-            // println!("{:?}", records);
-
-            reader.deserialize().for_each(|record| r.push(record.unwrap()));
-        }
+    let mut x = 10;
+    {
+        let y = 5;
+        println!("x = {}, y = {}", x, y); // x = 10, y = 5
+        x += y;
+        let mut x = 2; // shadowing
+        println!("x = {}, y = {}", x, y);   // x = 2, y = 5
     }
-    println!("----------------------------------");
-    println!("{:?}", r);
+    println!("x = {}", x); // x = 15
 }
+
+
+
+// fn main1() {
+//     let mut ss = String::from("aaa");
+//     // let ss1 = &mut ss;
+//     let ss2 = &mut ss;
+
+//     ss.push_str("bbb");
+//     println!("{} {}", "ss1", ss2);
+
+
+//     println!("Hello, world!");
+//     let opts: Opts = Opts::parse();
+//     println!("{:?}", opts);
+//     let mut r = Vec::<Record>::new();
+//     match opts.cmd {
+//         SubCommand::Csv(opts) => {
+//             println!("{:?}", opts);
+//             let mut reader = Reader::from_path(opts.input).unwrap();
+            
+//             // collection and panic on error
+//             // let records = reader
+//             //     .deserialize()
+//             //     .map(|record| record.unwrap())
+//             //     .collect::<Vec<Record>>();
+
+//             // println!("{:?}", records);
+
+//             reader.deserialize().for_each(|record| r.push(record.unwrap()));
+//         }
+//     }
+//     println!("----------------------------------");
+//     println!("{:?}", r);
+// }
