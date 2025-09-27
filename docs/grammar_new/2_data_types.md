@@ -2,9 +2,12 @@
 
 ## scalar types
 
-- i8 ~ i128 (u8 ~ u128)
-- f32 - f64
-- bool, char
+single value
+
+- Integer: i8 ~ i128 (u8 ~ u128)
+- Floating: f32 - f64
+- Boolean: bool
+- Character: char
 
 | Name    | Type         | Example                        | Description        |
 | ------- | ------------ | ------------------------------ | ------------------ |
@@ -27,6 +30,8 @@
 
 ## compound types
 
+a group of values
+
 | Name     | Type         | Example                                      | Description              |
 | -------- | ------------ | -------------------------------------------- | ------------------------ |
 | `vector` | Vec<T>       | `let v: Vec<i32> = vec![1, 2, 3];`           | Growable, heap-allocated |
@@ -34,6 +39,14 @@
 | `tuple`  | (T1, T2, ..) | `let t: (i32, f64, char) = (10, 3.14, 'a');` |                          |
 | `struct` | struct       |                                              |                          |
 | `enum`   | enum         |                                              |                          |
+
+### tuple
+
+```rs
+let tup:(&str, i32) = ("Hello", 42);
+let (channel:&str, port:i32) = tup;
+println!("channel: {}, port: {}", channel, port
+```
 
 # constant
 
@@ -48,10 +61,10 @@ fn main() {
 # bases 进制
 
 ```rs
-let a = 33u16;           // decimal literal (base 10), type u16
-let b = 0b1111_0000u8;   // binary literal (base 2), type u8
-let c = 0o77u8;          // octal literal (base 8), type u8
-let d = 0xFFu8;          // hexadecimal literal (base 16), type u8
+let a: u16 = 33_222u16;      // decimal  (base 10), type u16
+let b: u8 = 0b1111_0000u8;   // binary (base 2), type u8
+let c: u8 = 0o77u8;          // octal (base 8), type u8
+let d: u8 = 0xFFu8;          // hex (base 16), type u8
 ```
 
 # mutable

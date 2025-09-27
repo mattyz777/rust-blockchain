@@ -53,21 +53,9 @@
 
 
 fn main() {
-    struct ImportantExcerpt<'a> {
-        part: &'a str,
+    for i in 0..10 {
+        println!("Number: {}", i);
     }
-
-    impl<'a> ImportantExcerpt<'a> {
-    //  fn announce_part(&'a self, announcement: &str) -> &'a str {
-        fn announce_part(&self, announcement: &str) -> &str {
-            self.part
-        }
-    }
-
-    let novel = String::from("Call me Ishmael. Some years ago...");
-    let excerpt = ImportantExcerpt { part: &novel };
-    let first = excerpt.announce_part("Here is the first part:");
-    println!("First part: {}", first);
 }
 
 

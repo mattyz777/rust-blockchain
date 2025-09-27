@@ -6,6 +6,13 @@ for i in 0..10 {
 }
 ```
 
+```rs
+let a: [i32; _] = [1, 2, 3];]
+for i in a.iter() {
+    //
+}
+```
+
 # while
 
 ```rs
