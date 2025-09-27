@@ -50,23 +50,24 @@
 // use csv::Reader;
 // use crate::opts::{Opts, SubCommand, Record}; // not working
 // use rcli::opts::{Opts, SubCommand, Record};
-use std::fmt;
+
 
 fn main() {
-    // fn test1() -> &'static str {
-    //     let s1:String = String::from("hello");
-    //     return &s1; // returns a reference to data owned by the current function
-    // }
-
-    let mut x = 10;
-    {
-        let y = 5;
-        println!("x = {}, y = {}", x, y); // x = 10, y = 5
-        x += y;
-        let mut x = 2; // shadowing
-        println!("x = {}, y = {}", x, y);   // x = 2, y = 5
+    struct ImportantExcerpt<'a> {
+        part: &'a str,
     }
-    println!("x = {}", x); // x = 15
+
+    impl<'a> ImportantExcerpt<'a> {
+    //  fn announce_part(&'a self, announcement: &str) -> &'a str {
+        fn announce_part(&self, announcement: &str) -> &str {
+            self.part
+        }
+    }
+
+    let novel = String::from("Call me Ishmael. Some years ago...");
+    let excerpt = ImportantExcerpt { part: &novel };
+    let first = excerpt.announce_part("Here is the first part:");
+    println!("First part: {}", first);
 }
 
 
