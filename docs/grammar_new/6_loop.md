@@ -1,6 +1,6 @@
 # for
 
-## for range
+## for range constant
 
 ```rs
 for item in 0..10 {
@@ -8,7 +8,7 @@ for item in 0..10 {
 }
 ```
 
-## for range start end
+## for range variable
 
 ```rs
 let start = 0;

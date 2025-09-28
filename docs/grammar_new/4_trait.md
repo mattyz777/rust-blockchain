@@ -78,6 +78,28 @@ let s: String = person.to_string();
 println!("{}", s); // Person: 42
 ```
 
+# `#[derive(Debug)]`
+
+- Used for `{:?}` or `{:#?}` in `println!`
+- Auto implements the Debug trait for struct or enum.
+
+```rs
+#[derive(Debug)]
+struct Person {
+    name: String,
+    age: u32,
+}
+
+fn main() {
+    let p = Person { name: "Alice".to_string(), age: 30 };
+
+    println!("{:?}", p);  // Debug: for developers
+    println!("{:#?}", p); // Pretty Debug
+
+    // println!("{}", p); // ❌ ERROR: Display not implemented
+}
+```
+
 # From<T>
 
 - Define how to convert one type into another.
