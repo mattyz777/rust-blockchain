@@ -22,10 +22,12 @@ fn main() {
 
 # copy & move
 
-- Types that implement Copy: Small, fixed-size values stored entirely on the stack → integer, bool, char, tuples of Copy types, etc. → assignment copies.
-  - tuple with values of Copy types, it is copy
-  - tuple with values containing String, it is moved
-- Types that don’t implement Copy: Heap-allocated or resource-owning types like String, Vec<T>, HashMap<K,V> → assignment moves.
+- Types that implement Copy:
+  - Primitive scalars: integer, float, bool, char.
+  - Tuples/arrays where all elements are Copy.
+- Types that don’t implement Copy
+  - Heap-allocated containers: String, Vec, Box, HashMap, etc.
+  - Tuples/arrays that contain at least one non-Copy element → the whole thing becomes move-only.
 
 ```rs
 let x:i32 = 5;

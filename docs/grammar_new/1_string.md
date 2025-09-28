@@ -16,9 +16,10 @@ let s6:String = "hello".cloned();
 string literals is in static memory not as String on heap
 
 ```rs
-let slice1:&str = "hello"
+let slice1:&'static = "hello" // full form
+let slice2:&str = "hello" // short form
 // let s1:String = String::from("hello");
-let slice2:&str = s1.as_str();
+let slice3:&str = s1.as_str(); // convert String to &str
 ```
 
 # to_string

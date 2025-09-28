@@ -1,6 +1,8 @@
 # ToString
 
-System trait used to convert a value into a String.
+- System trait used to convert a value with any type into a String.
+- integer/float/char/bool implement `ToString` by default.
+- Usually implemented via the `Display` trait.
 
 ```rs
 // system trait
@@ -21,7 +23,15 @@ let s3:String = 'a'.to_string();  // "a"
 
 # Display
 
-Implementing Display defines how type is formatted when using "{}".
+- Implementing Display defines how type is formatted when using "{}".
+- It enables calling `.to_string()` on custom struct which implements Display.
+  ```rs
+  println!("{}", person);             // uses Display
+  println!("{}", person.to_string()); // via ToString auto-impl
+  ```
+- takes &self → borrows, doesn’t consume → you can still use the struct afterwards.
+
+## Display for
 
 ```rs
 struct Person {
@@ -41,7 +51,7 @@ let person = Person { id: 42 };
 println!("{}", person); // Person: 42
 ```
 
-# Display + ToString
+## Display + ToString
 
 The standard library provides a blanket implementation of ToString for all Display types:
 
@@ -70,12 +80,24 @@ println!("{}", s); // Person: 42
 
 # From<T>
 
-Define how to convert one type into another.
+- Define how to convert one type into another.
+- Consumes the input value (takes ownership), so the original value cannot be used afterwards.
+- `.into()` is just a convenience that calls `From::from`.
 
 ```rs
 // system trait
 pub trait From<T> {
     fn from(value: T) -> Self;
+}
+
+// system trait
+impl<T, U> Into<T> for U
+where
+    T: From<U>,
+{
+    fn into(self) -> T {
+        T::from(self)
+    }
 }
 ```
 
@@ -128,6 +150,13 @@ let v: Vec<i32> = arr.to_owned(); // allocate a new Vec<i32> [1,2,3]
 
 # Copy
 
-```rs
+- Indicates a type’s value can be duplicated.
+- Values are fixed-size and stored entirely on the stack. integer/float/char/bool; tuples or arrays where all elements are Copy
 
+```rs
+let x: i32 = 10;
+let y = x; // copied, x is still usable
+
+let tup: (i32, bool) = (42, true);
+let tup2 = tup; // copied because all elements are Copy
 ```

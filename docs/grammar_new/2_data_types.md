@@ -44,8 +44,12 @@ a group of values
 
 ```rs
 let tup:(&str, i32) = ("Hello", 42);
+// way one
 let (channel:&str, port:i32) = tup;
 println!("channel: {}, port: {}", channel, port
+
+// way two
+println!("channel: {}, port: {}", tup.0, tup.1);
 ```
 
 # constant
@@ -84,4 +88,5 @@ println!("x = {}", x);
 ```rs
 let x = 10;
 let x = x + 1; // 11
+let x = "a"; // string literal
 ```
