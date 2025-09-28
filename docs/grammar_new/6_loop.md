@@ -1,14 +1,38 @@
 # for
 
+## for range
+
 ```rs
-for i in 0..10 {
+for item in 0..10 {
+    // [0,9)
+}
+```
+
+## for range start end
+
+```rs
+let start = 0;
+let end = 100;
+
+for item in start..end {
+    println!("{}", item);
+}
+```
+
+## for array
+
+```rs
+let arr = [1, 2, 3];
+for item in arr() {
     //
 }
 ```
 
+## for vector
+
 ```rs
-let a: [i32; _] = [1, 2, 3];]
-for i in a.iter() {
+let vec = vec![1, 2, 3];
+for item in &vec() {
     //
 }
 ```

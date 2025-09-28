@@ -125,3 +125,9 @@ let arr: &[i32] = &[1, 2, 3];
 let v: Vec<i32> = arr.to_owned(); // allocate a new Vec<i32> [1,2,3]
 
 ```
+
+# Copy
+
+```rs
+
+```

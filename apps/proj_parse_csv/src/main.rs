@@ -53,9 +53,13 @@
 
 
 fn main() {
-    for i in 0..10 {
-        println!("Number: {}", i);
-    }
+    let x:i32 = 5;
+    let y:i32 = x;
+
+    let s1:String = String::from("hello");
+    let s2:String = s1;
+
+    println!("{}, {}", x, s2);
 }
 
 
