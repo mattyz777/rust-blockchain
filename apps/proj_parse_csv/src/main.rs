@@ -53,41 +53,13 @@
 
 
 fn main() {
-    let a: [i32; 3] = [1, 2, 3];
-    println!("{:?}", a);
+let mut s = String::from("hello");
+let hello = &s[..5];  // immutable reference created
+println!("{}", hello); // last usage of hello
+
+let world = &s[..];   // another immutable reference
+println!("{}", world); // last usage of world
+
+s.clear(); 
 }
 
-
-
-// fn main1() {
-//     let mut ss = String::from("aaa");
-//     // let ss1 = &mut ss;
-//     let ss2 = &mut ss;
-
-//     ss.push_str("bbb");
-//     println!("{} {}", "ss1", ss2);
-
-
-//     println!("Hello, world!");
-//     let opts: Opts = Opts::parse();
-//     println!("{:?}", opts);
-//     let mut r = Vec::<Record>::new();
-//     match opts.cmd {
-//         SubCommand::Csv(opts) => {
-//             println!("{:?}", opts);
-//             let mut reader = Reader::from_path(opts.input).unwrap();
-            
-//             // collection and panic on error
-//             // let records = reader
-//             //     .deserialize()
-//             //     .map(|record| record.unwrap())
-//             //     .collect::<Vec<Record>>();
-
-//             // println!("{:?}", records);
-
-//             reader.deserialize().for_each(|record| r.push(record.unwrap()));
-//         }
-//     }
-//     println!("----------------------------------");
-//     println!("{:?}", r);
-// }
