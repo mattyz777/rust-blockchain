@@ -173,7 +173,11 @@ let v: Vec<i32> = arr.to_owned(); // allocate a new Vec<i32> [1,2,3]
 # Copy
 
 - Indicates a type’s value can be duplicated.
-- Values are fixed-size and stored entirely on the stack. integer/float/char/bool; tuples or arrays where all elements are Copy
+- Values are fixed-size and stored entirely on the stack.
+  - integer/float/char/bool;
+  - tuples or arrays where all elements are Copy
+- String, Vec, Box, HashMap, etc. cannot derive Copy. `#[derive(Copy)]`
+- All Copy types must also be Clone
 
 ```rs
 let x: i32 = 10;
@@ -181,4 +185,12 @@ let y = x; // copied, x is still usable
 
 let tup: (i32, bool) = (42, true);
 let tup2 = tup; // copied because all elements are Copy
+```
+
+```rs
+#[derive(Debug, Copy, Clone)] // <---------- Copy + Clone; all Copy types must also be Clone
+enum IP {
+    V4 = 4,
+    V6 = 6,
+}
 ```

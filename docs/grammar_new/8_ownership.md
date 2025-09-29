@@ -22,11 +22,14 @@ fn main() {
 
 # copy & move
 
-- Types that implement Copy:
+By default, variables are moved when passed to a function. Move vs Copy is determined by the type:
+
+- If the type implements Copy, passing by value copies it.
   - Primitive scalars: integer, float, bool, char.
   - Tuples/arrays where all elements are Copy.
-- Types that don’t implement Copy
+- If it does not implement Copy, passing by value moves it.
   - Heap-allocated containers: String, Vec, Box, HashMap, etc.
+  - enum
   - Tuples/arrays that contain at least one non-Copy element → the whole thing becomes move-only.
 
 ```rs
