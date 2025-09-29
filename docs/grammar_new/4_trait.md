@@ -103,7 +103,7 @@ fn main() {
 # From<T>
 
 - Define how to convert one type into another.
-- Consumes the input value (takes ownership), so the original value cannot be used afterwards.
+- move, the original value cannot be used afterwards.
 - `.into()` is just a convenience that calls `From::from`.
 
 ```rs

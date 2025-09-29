@@ -41,7 +41,8 @@ println!("{}, {}", x, s1);
 
 # function
 
-- scalar types: copy; heap types: move
+- scalar types: copy;
+- heap types: move
 
 ```rs
 let s1 = String::from("hello");
@@ -76,7 +77,7 @@ fn make_copy(x: i32) {
 - NLL 判断一个引用是否"活跃"（active），是基于它是否被使用过，而不是是否被创建。
 
 ```rs
-let s = String::from("hello");
+let mut s = String::from("hello");
 let r1 = &s;
 let r2 = &s;
 
@@ -90,7 +91,7 @@ println!("{}", r3);
 ```
 
 ```rs
-let s = String::from("hello");
+let mut s = String::from("hello");
 let r1 = &s;        // r1 created →  it becomes "active" (counts as being borrowed) when it is used in println!.
 println!("{}", r1); // last usage of r1 → after this, r1 is inactive
 let r2 = &mut s;    // allowed because r1 is inactive

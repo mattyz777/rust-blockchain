@@ -53,13 +53,10 @@
 
 
 fn main() {
-let mut s = String::from("hello");
-let hello = &s[..5];  // immutable reference created
-println!("{}", hello); // last usage of hello
-
-let world = &s[..];   // another immutable reference
-println!("{}", world); // last usage of world
-
-s.clear(); 
+    let mut s = String::from("hello");
+    let r1 = &s;        // r1 created →  it becomes "active" (counts as being borrowed) when it is used in println!.
+    println!("{}", r1); // last usage of r1 → after this, r1 is inactive
+    let r2 = &mut s;    // allowed because r1 is inactive
+    println!("{}", r2);
 }
 
