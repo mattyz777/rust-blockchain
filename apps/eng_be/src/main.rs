@@ -5,45 +5,25 @@ use tokio;
 use tower_http::cors::CorsLayer;
 use tower_http::trace::TraceLayer;
 use tracing::info;
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
-use crate::dtos::user_dto::{CreateUserRequest, UpdateUserRequest}; 
 use crate::models::user_model::User; 
 
 pub mod error;
 pub mod models;
 pub mod dtos;
 pub mod routes;
+pub mod docs;
+pub mod telemetry;
 
 pub struct AppState {
     db: Mutex<Vec<User>>,
 }
 
-#[derive(OpenApi)]
-#[openapi(
-    paths(
-        routes::user::create_user,
-        routes::user::list_users,
-        routes::user::get_user,
-        routes::user::update_user,
-        routes::user::delete_user,
-    ),
-    components(schemas(User, CreateUserRequest, UpdateUserRequest)),
-    tags((name = "User API", description = "User management endpoints"))
-)]
-struct ApiDoc;
-
 #[tokio::main]
 async fn main() {
-    // 1. Initialize Tracing with advanced configuration
-    tracing_subscriber::registry()
-        .with(
-            EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| "eng_be=info,tower_http=debug".into()),
-        )
-        .with(tracing_subscriber::fmt::layer())
-        .init();
+    // 1. Initialize Telemetry (Tracing & Logging)
+    crate::telemetry::init_tracing();
 
     // 2. Load environment variables
     dotenv().ok();
@@ -60,7 +40,7 @@ async fn main() {
 
     // 5. Build the main router
     let app = Router::new()
-        .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", ApiDoc::openapi()))
+        .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", crate::docs::ApiDoc::openapi()))
         .route("/", get(|| async { "Matt API Running" }))
         // Combine routes from different modules
         .nest("/users", crate::routes::user::user_routes())
