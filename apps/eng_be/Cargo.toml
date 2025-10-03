@@ -6,8 +6,16 @@ edition = "2024"
 [dependencies]
 # Web Framework
 axum = { version = "0.8.6", features = ["macros"] }
-tokio = { version = "1", features = ["full"] }
+tokio = { version = "1.47.1", features = ["full"] }
 tower-http = { version = "0.6.6", features = ["cors", "trace"] }
+
+# Logging
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.20", features = ["fmt", "env-filter"] }
+
+# API Documentation
+utoipa = { version = "5.4.0", features = ["axum_extras", "uuid", "chrono"] }
+utoipa-swagger-ui = { version = "9.0.2", features = ["axum"] }
 
 # Data & Config
 serde = { version = "1.0", features = ["derive"] }
@@ -22,3 +30,5 @@ sqlx = { version = "0.8.6", features = ["runtime-tokio-rustls", "postgres", "uui
 # Auth & Security
 jsonwebtoken = { version = "10.0.0", features = ["rust_crypto"] }
 bcrypt = "0.17.1" # For password hashing
+
+
