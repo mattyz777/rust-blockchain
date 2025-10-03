@@ -96,3 +96,45 @@ where
     // ...
 }
 ```
+
+# associated types
+
+```rs
+struct Counter {
+    count: u32,
+    max: u32,
+}
+
+impl Counter {
+    fn new(max: u32) -> Counter {
+        Counter { count: 0, max }
+    }
+}
+
+// Iterator trait in `std::iter::iterator`
+impl Iterator for Counter {
+    type Item = u32; // associated type: each iteration yields u32
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.count < self.max {
+            self.count += 1;
+            Some(self.count)
+        } else {
+            None
+        }
+    }
+}
+
+fn main() {
+    let mut counter = Counter::new(5);
+
+    while let Some(value) = counter.next() {
+        println!("Got: {}", value);
+    }
+
+    let counter2 = Counter::new(3);
+    for value in counter2 {
+        println!("For loop: {}", value);
+    }
+}
+```
