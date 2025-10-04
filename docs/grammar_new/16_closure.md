@@ -22,7 +22,7 @@ fn main() {
 ```rs
 fn call_function<F>(f: F, arg: u32) -> u32
 where
-    F: Fn(u32) -> u32,
+    F: Fn(u32) -> u32, // restrict parameter type and returned value type
 {
     f(arg)
 }

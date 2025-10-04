@@ -65,7 +65,7 @@ loop {
 }
 ```
 
-# break loop return value
+# loop break return value
 
 ```rs
 fn main() {

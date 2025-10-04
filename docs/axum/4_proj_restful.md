@@ -55,3 +55,7 @@ async fn main() {
 
 
 ```
+
+# swagger
+
+`http://localhost:3000/swagger-ui`

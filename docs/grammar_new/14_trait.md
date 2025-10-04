@@ -99,6 +99,36 @@ where
 
 # associated types
 
+- The trait needs to refer to a type that will differ between implementors, but not generic.
+- Commonly used in iterators, Future, and many std::ops traits.
+
+```rs
+trait MyTrait {
+    type Output;
+    fn do_something(&self) -> Self::Output;
+}
+
+struct Foo;
+
+impl MyTrait for Foo {
+    type Output = i32;
+    fn do_something(&self) -> Self::Output {
+        42
+    }
+}
+
+struct Bar;
+
+impl MyTrait for Bar {
+    type Output = String;
+    fn do_something(&self) -> Self::Output {
+        "Hello".to_string()
+    }
+}
+```
+
+# associated types in iterator trait
+
 ```rs
 struct Counter {
     count: u32,

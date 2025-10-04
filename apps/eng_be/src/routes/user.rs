@@ -20,6 +20,8 @@ pub fn user_routes() -> Router<Arc<AppState>> {
         )
 }
 
+
+
 // POST /users
 #[utoipa::path(
     post,
@@ -45,6 +47,8 @@ async fn create_user(
     Ok((axum::http::StatusCode::CREATED, Json(user)))
 }
 
+
+
 // GET /users
 #[utoipa::path(
     get,
@@ -59,6 +63,8 @@ async fn list_users(State(state): State<Arc<AppState>>) -> Result<Json<Vec<User>
     let db = state.db.lock().map_err(|_| AppError::MutexPoisoned)?;
     Ok(Json(db.clone()))
 }
+
+
 
 // GET /users/:id
 #[utoipa::path(
@@ -83,6 +89,8 @@ async fn get_user(
         .map(|u| Json(u.clone()))
         .ok_or(AppError::UserNotFound)
 }
+
+
 
 // PUT /users/:id
 #[utoipa::path(
@@ -117,6 +125,8 @@ async fn update_user(
         Err(AppError::UserNotFound)
     }
 }
+
+
 
 // DELETE /users/:id
 #[utoipa::path(

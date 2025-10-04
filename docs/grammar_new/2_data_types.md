@@ -30,25 +30,25 @@ single value
 
 ## compound types
 
-a group of values
+A compound type groups multiple values into one unit.
 
 | Name     | Type         | Example                                      | Description              |
 | -------- | ------------ | -------------------------------------------- | ------------------------ |
+| `tuple`  | (T1, T2, ..) | `let t: (i32, f64, char) = (10, 3.14, 'a');` | Fixed-size Built-in      |
+| `array`  | [T; N]       | `let a: [i32; 3] = [1, 2, 3];`               | Fixed-size Built-in      |
 | `vector` | Vec<T>       | `let v: Vec<i32> = vec![1, 2, 3];`           | Growable, heap-allocated |
-| `array`  | [T; N]       | `let a: [i32; 3] = [1, 2, 3];`               | Fixed-size list          |
-| `tuple`  | (T1, T2, ..) | `let t: (i32, f64, char) = (10, 3.14, 'a');` |                          |
-| `struct` | struct       |                                              |                          |
-| `enum`   | enum         |                                              |                          |
+| `struct` | struct       |                                              | user defined             |
+| `enum`   | enum         |                                              | user defined             |
 
 ### tuple
 
 ```rs
 let tup:(&str, i32) = ("Hello", 42);
-// way one
+// way one - pattern matching
 let (channel:&str, port:i32) = tup;
-println!("channel: {}, port: {}", channel, port
+println!("channel: {}, port: {}", channel, port);
 
-// way two
+// way two - tuple index expressions
 println!("channel: {}, port: {}", tup.0, tup.1);
 ```
 

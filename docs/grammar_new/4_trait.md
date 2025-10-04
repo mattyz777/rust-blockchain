@@ -1,19 +1,18 @@
+# Summary
+
+| Trait            | Summary                                                |
+| ---------------- | ------------------------------------------------------ |
+| ToString         | convert a value to String via `.to_string()`           |
+| Display          | `{}` in `println!` , enables `.to_string()`            |
+| #[derive(Debug)] | `{:?}` or `{:#?}` in `println!`                        |
+| From<T>          | convert to another type with `.into()` or `From::from` |
+| ToOwned          | turn a borrowed reference into an owned value          |
+| Copy             | Indicates duplicable, requires Copy                    |
+
 # ToString
 
-- System trait used to convert a value with any type into a String.
+- convert a value to String via `.to_string()`
 - integer/float/char/bool implement `ToString` by default.
-- Usually implemented via the `Display` trait.
-
-```rs
-// system trait
-pub trait ToString {
-    fn to_string(&self) -> String;
-}
-```
-
-# to_string
-
-convert a value to String
 
 ```rs
 let s1:String = 1.to_string();    // "1"
@@ -23,7 +22,7 @@ let s3:String = 'a'.to_string();  // "a"
 
 # Display
 
-- Implementing Display defines how type is formatted when using "{}".
+- used for `{}` in `println!`.
 - It enables calling `.to_string()` on custom struct which implements Display.
   ```rs
   println!("{}", person);             // uses Display
@@ -31,7 +30,7 @@ let s3:String = 'a'.to_string();  // "a"
   ```
 - takes &self → borrows, doesn’t consume → you can still use the struct afterwards.
 
-## Display for
+## Display impl
 
 ```rs
 struct Person {
@@ -57,7 +56,6 @@ The standard library provides a blanket implementation of ToString for all Displ
 
 ```rs
 /**
- * system trait
  * in core::string::ToString
  * for any type T that implements fmt::Display, also implement ToString.
  */
@@ -81,7 +79,6 @@ println!("{}", s); // Person: 42
 # `#[derive(Debug)]`
 
 - Used for `{:?}` or `{:#?}` in `println!`
-- Auto implements the Debug trait for struct or enum.
 
 ```rs
 #[derive(Debug)]
@@ -92,36 +89,16 @@ struct Person {
 
 fn main() {
     let p = Person { name: "Alice".to_string(), age: 30 };
-
     println!("{:?}", p);  // Debug: for developers
     println!("{:#?}", p); // Pretty Debug
-
-    // println!("{}", p); // ❌ ERROR: Display not implemented
 }
 ```
 
 # From<T>
 
-- Define how to convert one type into another.
-- move, the original value cannot be used afterwards.
+- Convert one type into another.
 - `.into()` is just a convenience that calls `From::from`.
-
-```rs
-// system trait
-pub trait From<T> {
-    fn from(value: T) -> Self;
-}
-
-// system trait
-impl<T, U> Into<T> for U
-where
-    T: From<U>,
-{
-    fn into(self) -> T {
-        T::from(self)
-    }
-}
-```
+- move, the original value cannot be used afterwards.
 
 ```rs
 struct Person {
@@ -150,14 +127,7 @@ fn main() {
 
 # ToOwned
 
-Turn a borrowed reference (&T) into an owned value
-
-```rs
-pub trait ToOwned {
-    type Owned: Borrow<Self>;
-    fn to_owned(&self) -> Self::Owned;
-}
-```
+- Turn a borrowed reference (&T) into an owned value
 
 ```rs
 // &str → string
@@ -173,10 +143,10 @@ let v: Vec<i32> = arr.to_owned(); // allocate a new Vec<i32> [1,2,3]
 # Copy
 
 - Indicates a type’s value can be duplicated.
-- Values are fixed-size and stored entirely on the stack.
+- Values are fixed-size and stored on the stack.
   - integer/float/char/bool;
   - tuples or arrays where all elements are Copy
-- String, Vec, Box, HashMap, etc. cannot derive Copy. `#[derive(Copy)]`
+  - String, Vec, Box, HashMap, etc. cannot derive Copy. `#[derive(Copy)]`
 - All Copy types must also be Clone
 
 ```rs
