@@ -1,46 +1,45 @@
 # Mutext<T>
 
-- Mutual Exclusion（互斥
-- 只允许一个线程访问该数据。
-- `	.lock()`
+- Mutual exclusion: only one thread can access the data at a time.
+- Use `.lock()` to acquire the lock.
 
 ```rs
 use std::sync::Mutex;
 
-let data = Mutex::new(0); // 创建一个保护整数 0 的 Mutex
+let data = Mutex::new(0);                 // Create a Mutex protecting the integer 0
 
 {
-    let mut num = data.lock().unwrap(); // 尝试获取锁
-    // 成功获取锁，现在可以安全地修改数据
-    *num += 1; // 内部数据变为 1
-    // num（MutexGuard）离开作用域，锁自动释放
+    let mut num = data.lock().unwrap();   // Attempt to acquire the lock
+    // Lock acquired successfully, safe to modify the data
+    *num += 1;                            // Internal data becomes 1
+    // `num` (MutexGuard) goes out of scope, lock is automatically released
 }
 
-// 此时，另一个线程可以再次获取锁
+// At this point, another thread can acquire the lock
 ```
 
 # RwLock<T>
 
-- 读写锁, 读共享、写互斥
-- `.read()` & `.write()`
+- Read-write lock: multiple readers can access the data simultaneously, but writers are exclusive.
+- Use `.read()` for shared access and `.write()` for exclusive access.
 
 ```rs
 use std::sync::RwLock;
 
 let data = RwLock::new(vec![1, 2, 3]);
 
-// --- 多个线程可以同时读取 ---
+// --- Multiple threads can read simultaneously ---
 {
     let read_guard1 = data.read().unwrap();
     let read_guard2 = data.read().unwrap();
-    println!("数据内容: {:?}", *read_guard1);
-    // read_guard1 和 read_guard2 离开作用域，读锁释放
+    println!("Data contents: {:?}", *read_guard1);
+    // read_guard1 and read_guard2 go out of scope, read locks are released
 }
 
-// --- 写入必须独占 ---
+// --- Writing requires exclusive access ---
 {
-    let mut write_guard = data.write().unwrap(); // 获取写锁
-    write_guard.push(4); // 修改数据
-    // write_guard 离开作用域，写锁释放
+    let mut write_guard = data.write().unwrap();   // Acquire write lock
+    write_guard.push(4);                           // Modify the data
+    // write_guard goes out of scope, write lock is released
 }
 ```
