@@ -1,3 +1,20 @@
+# summary
+
+- ```rs
+  let t = thread::spawn(move || {
+    //
+  });
+  let t_val = t.join().unwrap();   // wait thread to finish
+  ```
+- ```rs
+  let (tx, rx) = mpsc::channel();   // create a channel
+  let t = thread::spawn(move || {
+    tx.send(1).unwrap();            // send a value to the main thread
+  });
+  let t_val = rx.recv().unwrap();   // wait value in main thread (blocks)
+  t.join().unwrap();                // wait thread to finish
+  ```
+
 # thread
 
 ```rs
