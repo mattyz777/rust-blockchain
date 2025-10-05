@@ -1,28 +1,18 @@
-use tokio::sync::Mutex;
-use std::sync::Arc;
-
+use axum::{routing::get, Router};
+use std::net::SocketAddr;
 
 #[tokio::main]
 async fn main() {
-    let counter = Arc::new(Mutex::new(0));
-    let mut handles = vec![];
+    let app = Router::new()
+        .route("/",  get(root));
 
-    for i in 0..5 {
-        let counter = Arc::clone(&counter);
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
 
-        let handle = tokio::spawn(async move {
-            let mut num = counter.lock().await;
-            *num += 1;
-            println!("Task {}: {}", i, *num);
-        });
+    axum::serve(listener, app)
+        .await
+        .unwrap();
+}
 
-        handles.push(handle);
-    }
-
-    for handle in handles {
-        handle.await.unwrap();
-    }
-
-    let result = *counter.lock().await;
-    println!("Result: {}", result); // Result: 5
+async fn root() -> &'static str {
+    "Hello, World!"
 }
