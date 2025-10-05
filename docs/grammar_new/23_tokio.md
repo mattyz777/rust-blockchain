@@ -2,12 +2,16 @@
 
 Tokio's scheduler choose whether tasks run concurrently on a single thread or parallelism across multiple threads, depending on whether the task is yielding or actively computing.
 
-- Concurrency (Same Thread): When a task encounters a waiting state (e.g., I/O or a timer) and hits `.await`, it voluntarily yields control. The underlying OS thread remains unblocked and is immediately reassigned by the Executor to process another ready task. This allows a single OS thread to concurrently manage thousands of non-blocking I/O operations.
-- Parallelism (Different Threads): The Executor distributes ready tasks across its entire thread pool, enabling multiple tasks to run simultaneously on different CPU cores.
+- Concurrency (Same Thread)
+  - When a task encounters a waiting state (e.g., I/O or a timer), it voluntarily yields control.
+  - The underlying OS thread remains unblocked and is reassigned to process another task.
+  - This allows a single OS thread to concurrently manage thousands of non-blocking I/O operations.
+- Parallelism (Different Threads)
+  - The Executor distributes ready tasks across the thread pool, enabling multiple tasks to run simultaneously on different CPU cores.
 
 # tokio Scheduler Mechanism
 
-Tokio scheduler takes the submitted task, processes it using its thread pool, and delivers the final result back to the awaiting caller. Tokio scheduler oincludes two components:
+Tokio scheduler takes the submitted task, processes it using its thread pool, and delivers the final result back to the awaiting caller. Tokio scheduler includes two components:
 
 - The Executor (The Scheduler): It functions similarly to an event loop, taking submitted tasks (Futures/coroutines) and placing them on a ready queue. It is responsible for actively polling these tasks to drive them forward.
 - The Reactor (I/O Polling): This component integrates with the operating system to monitor external events (e.g., a network socket receiving data, a timer expiring). When an event occurs, the Reactor signals the Executor, which then uses the task's Waker to mark the suspended task as "ready" and put it back onto the queue for a worker thread to resume.

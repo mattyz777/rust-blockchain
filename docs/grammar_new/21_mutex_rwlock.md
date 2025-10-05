@@ -24,22 +24,37 @@ let data = Mutex::new(0);                 // Create a Mutex protecting the integ
 - Use `.read()` for shared access and `.write()` for exclusive access.
 
 ```rs
-use std::sync::RwLock;
+use std::sync::{Arc, RwLock};
+use std::thread;
+use std::time::Duration;
 
-let data = RwLock::new(vec![1, 2, 3]);
+fn main() {
+    let data = Arc::new(RwLock::new(0));           // ownership of the lock object
 
-// --- Multiple threads can read simultaneously ---
-{
-    let read_guard1 = data.read().unwrap();
-    let read_guard2 = data.read().unwrap();
-    println!("Data contents: {:?}", *read_guard1);
-    // read_guard1 and read_guard2 go out of scope, read locks are released
-}
+    let mut handles = vec![];
+    for i in 0..5 {
+        let data = Arc::clone(&data);              // reference plus 1
+        handles.push(thread::spawn(move || {
+            loop {
+                let val = *data.read().unwrap();   // acquire read lock
+                println!("Reader {}: {}", i, val);
+                thread::sleep(Duration::from_millis(500));
+            }
+        }));
+    }
 
-// --- Writing requires exclusive access ---
-{
-    let mut write_guard = data.write().unwrap();   // Acquire write lock
-    write_guard.push(4);                           // Modify the data
-    // write_guard goes out of scope, write lock is released
+    let writer = thread::spawn(move || {
+        for i in 1..5 {
+            thread::sleep(Duration::from_secs(2));
+            {
+                let mut w = data.write().unwrap();  // acquire write lock
+                *w += 10;
+                println!("==== Writer updated to {} ====", *w);
+            } // auto release lock here
+        }
+    });
+
+    thread::sleep(Duration::from_secs(10));
+    std::process::exit(0);
 }
 ```
