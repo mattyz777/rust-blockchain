@@ -5,25 +5,14 @@ use tokio;
 use tower_http::cors::CorsLayer;
 use tower_http::trace::TraceLayer;
 use tracing::info;
+use eng_be::{telemetry, api_docs, routes, AppState};
 use utoipa::OpenApi;
 use utoipa_swagger_ui::SwaggerUi;
-use crate::models::user_model::User; 
-
-pub mod error;
-pub mod models;
-pub mod dtos;
-pub mod routes;
-pub mod docs;
-pub mod telemetry;
-
-pub struct AppState {
-    db: Mutex<Vec<User>>,
-}
 
 #[tokio::main]
 async fn main() {
     // 1. Initialize Telemetry (Tracing & Logging)
-    crate::telemetry::init_tracing();
+    telemetry::init_tracing();
 
     // 2. Load environment variables
     dotenv().ok();
@@ -40,10 +29,10 @@ async fn main() {
 
     // 5. Build the main router
     let app = Router::new()
-        .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", crate::docs::ApiDoc::openapi()))
+        .merge(SwaggerUi::new("/swagger-ui").url("/api-docs/openapi.json", api_docs::ApiDoc::openapi()))
         .route("/", get(|| async { "Matt API Running" }))
         // Combine routes from different modules
-        .nest("/users", crate::routes::user::user_routes())
+        .nest("/users", routes::user::user_routes())
         // Add middleware for logging and CORS
         .layer(TraceLayer::new_for_http())
         .layer(CorsLayer::permissive())

@@ -39,7 +39,7 @@ let h1 = thread::spawn(move || {
     println!("{}", name);
 });
 
-let h2 = thread::spawn(move || {
+let h2 = thread::spawn(move || { // <------------- error due to name is moved
     println!("{}", name);
 });
 ```
@@ -108,7 +108,7 @@ async fn main() {
             let mut num = counter.lock().await;
             *num += 1;
             println!("Task {}: {}", i, *num);
-        });
+        });  // <---------- lock is auto released when leaving the scope
 
         handles.push(handle);
     }
