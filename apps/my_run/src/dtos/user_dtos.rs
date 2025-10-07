@@ -17,7 +17,7 @@ pub struct UserUpdateDto {
     pub password: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct UserDto {
     pub id: u64,
     pub username: String,

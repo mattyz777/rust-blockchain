@@ -1,36 +1,36 @@
+use axum::{routing::get, Router};
+use std::sync::{atomic::AtomicUsize, Arc, Mutex};
+use dtos::user_dtos::UserDto;
 
+mod dtos;
+mod routes;
 
-use axum::{extract::State, routing::get, Router};
-use std::sync::Arc;
-
-// 1. Define AppState
-#[derive(Clone)]
-struct AppState {
-    db: String, // e.g. SqlitePool
-    app_name: String,
+pub struct AppState {
+    db: Mutex<Vec<UserDto>>,
+    next_id: AtomicUsize,
 }
 
-// 2. Initialize AppState
 #[tokio::main]
 async fn main() {
-    let state = Arc::new(AppState {
-        db: "db pool".to_string(),
-        app_name: "API".to_string(),
+    let app_state = Arc::new(AppState {
+        db: Mutex::new(vec![]),
+        next_id: AtomicUsize::new(1),
     });
 
-    // 3. Build app with state
     let app = Router::new()
-        .route("/", get(root_handler))
-        .with_state(state);
+        .route("/", get(root))
+        .nest("/users", routes::user_routes::user_routes())
+        .nest("/auth", routes::auth_routes::auth_routes())
+        .with_state(app_state);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    println!("🚀 Server listening on {}", listener.local_addr().unwrap());
 
     axum::serve(listener, app)
         .await
         .unwrap();
 }
 
-// 4. Define a handler that accepts AppState
-async fn root_handler(State(state): State<Arc<AppState>>) -> String {
-    format!("Welcome to {} - {}!", state.app_name, state.db)
+async fn root() -> &'static str {
+    "Welcome to the `my_run` API!"
 }

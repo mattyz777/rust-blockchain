@@ -14,7 +14,7 @@ pub fn user_routes() -> Router<Arc<AppState>> {
         .route("/", get(list_users).post(create_user))
         .route("/query", post(query_users))
         .route(
-            "/:id",
+            "/{id}",
             get(get_user_by_id).put(update_user).delete(delete_user),
         )
 }
@@ -46,8 +46,8 @@ async fn update_user(
     Path(id): Path<u64>,
     Json(payload): Json<UserUpdateDto>,
 ) -> Result<Json<UserDto>, StatusCode> {
-    let mut users = db.lock().unwrap();
-    if let Some(user) = users.iter_mut().find(|u| u.id == id) {
+    let mut db = state.db.lock().unwrap();
+    if let Some(user) = db.iter_mut().find(|u| u.id == id) {
         if let Some(username) = payload.username {
             user.username = username;
         }
