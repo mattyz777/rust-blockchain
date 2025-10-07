@@ -87,8 +87,6 @@ async fn query_users(
         }
     }
     
-    // Note: Filtering by plaintext password is a security risk.
-    // This is for demonstration purposes. In a real app, you would not do this.
     if let Some(password) = payload.password {
         if !password.is_empty() {
             let hashed_password = format!("hashed-{}", password);

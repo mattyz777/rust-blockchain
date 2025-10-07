@@ -6,7 +6,7 @@ mod dtos;
 mod routes;
 
 pub struct AppState {
-    db: Mutex<Vec<UserDto>>,
+    db: Mutex<Vec<UserDto>>,  // rw vec
     next_id: AtomicUsize,
 }
 
@@ -19,12 +19,14 @@ async fn main() {
 
     let app = Router::new()
         .route("/", get(root))
+        // define routes
         .nest("/users", routes::user_routes::user_routes())
         .nest("/auth", routes::auth_routes::auth_routes())
+        // pass in state
         .with_state(app_state);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
-    println!("🚀 Server listening on {}", listener.local_addr().unwrap());
+    println!("Server listening on {}", listener.local_addr().unwrap());
 
     axum::serve(listener, app)
         .await
@@ -32,5 +34,5 @@ async fn main() {
 }
 
 async fn root() -> &'static str {
-    "Welcome to the `my_run` API!"
+    "Welcome!"
 }

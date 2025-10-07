@@ -17,15 +17,15 @@ pub struct UserUpdateDto {
     pub password: Option<String>,
 }
 
+#[derive(Serialize, Deserialize, Debug, Validate)]
+pub struct UserQueryDto {
+    pub username: Option<String>,
+    pub password: Option<String>,
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct UserDto {
     pub id: u64,
     pub username: String,
     pub password: String,
-}
-
-#[derive(Serialize, Deserialize, Debug, Validate)]
-pub struct UserQueryDto {
-    pub username: Option<String>,
-    pub password: Option<String>, // Note: Querying by plaintext password is not secure
 }
