@@ -1,6 +1,7 @@
 # summary
 
 - `mod` 用于加载指定的模块文件（或代码块）；然后通过 `use` 引入。
+- `use ::{m, n};` 引入模块中的指定内容，如多个函数、对象
 - `mod x;` x is file name and Rust searches in the same directory as the current file for one of these:
   - `x.rs`
   - `x/mod.rs`
@@ -21,6 +22,10 @@ src/
 pub fn greet(name: &str) {
     println!("Hello, {name}!");
 }
+
+pub fn bye(name: &str) {
+    println!("Goodbye, {name}!");
+}
 ```
 
 ```rs
@@ -30,13 +35,15 @@ pub mod helper;
 
 ```rs
 // main.rs
-mod utils;                         // no matter #1 or #2, both need mod utils
+mod utils;                             // no matter #1 or #2, both need mod utils
 
 fn main() {
-    use utils::helper::greet;      // #1 ✅ 必须用 use 导入模块或函数
-    greet("Matt");                 // #1
+    use utils::helper::{greet, bye};   // #1 ✅ 必须用 use 导入模块或函数
+    greet("Matt");                     // #1
+    bye("Matt");                       // #1
 
-    utils::helper::greet("Matt");  // #2
+    utils::helper::greet("Matt");      // #2
+    utils::helper::bye("Matt");        // #2
 }
 ```
 
