@@ -1,6 +1,6 @@
 # summary
 
-`mod x;` Rust searches in the same directory as the current file for one of these:
+`mod x;` x is file name and Rust searches in the same directory as the current file for one of these:
 
 - `x.rs`
 - `x/mod.rs`

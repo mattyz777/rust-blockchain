@@ -7,3 +7,8 @@ edition = "2024"
 # Web Framework
 axum = { version = "0.8.5", features = ["macros"] }
 tokio = { version = "1.47.1", features = ["full"] }
+# --- JSON serialization ---
+serde = { version =  "1.0.228", features = ["derive"] }
+serde_json = { version = "1.0.145"}
+# --- validation ---
+validator = { version = "0.20.0", features = ["derive"] }
