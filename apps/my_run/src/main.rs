@@ -1,10 +1,11 @@
-use axum::{routing::get, Router};
+use axum::{extract::State,routing::get, Router};
 use std::sync::{atomic::AtomicUsize, Arc, Mutex};
 use dtos::user_dtos::UserDto;
 
 mod dtos;
 mod routes;
 
+#[derive(Debug)]
 pub struct AppState {
     db: Mutex<Vec<UserDto>>,  // rw vec
     next_id: AtomicUsize,
@@ -33,6 +34,7 @@ async fn main() {
         .unwrap();
 }
 
-async fn root() -> &'static str {
+async fn root(State(state): State<Arc<AppState>>) -> &'static str {
+    println!("{:?}", state);
     "Welcome!"
 }

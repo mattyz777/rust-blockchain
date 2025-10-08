@@ -14,7 +14,7 @@ pub fn user_routes() -> Router<Arc<AppState>> {
         .route("/", get(list_users).post(create_user))
         .route("/query", post(query_users))
         .route(
-            "/{id}",
+            "/{id}",----
             get(get_user_by_id).put(update_user).delete(delete_user),
         )
 }
@@ -24,9 +24,6 @@ async fn create_user(
     State(state): State<Arc<AppState>>,
     Json(payload): Json<UserCreateDto>,
 ) -> (StatusCode, Json<UserDto>) {
-    // Note: Storing plaintext passwords is a security risk.
-    // For example, using the `bcrypt` crate:
-    // let password_hash = bcrypt::hash(&payload.password, bcrypt::DEFAULT_COST).unwrap();
     let encrypted_password = format!("hashed-{}", payload.password);
 
     let user = UserDto {
