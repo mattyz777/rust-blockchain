@@ -105,3 +105,37 @@ fn main() {
     x::y::hello();
 }
 ```
+
+# Compiler Looks in Wrong Path
+
+```
+src/
+ ├── main.rs
+ ├── app_state.rs
+ └── dtos/
+     ├── auth_dtos.rs
+     └── user_dtos.rs
+```
+
+```rs
+// file app_state.rs
+
+// mod dtos;
+```
+
+`mod dtos;` tells the compiler to look for a dtos module inside the app_state module (i.e., at src/app_state/dtos.rs), which doesn't exist.
+
+# Relationship Between main.rs and lib.rs
+
+When both `main.rs` and `lib.rs` exist, one package with two crates will be built.
+
+- `lib.rs` → builds a library crate (my_app).
+- `main.rs` → builds a binary crate (the executable).
+- The binary crate links to the library crate, producing a single executable in the final build.
+
+# Crate Path Usage - "crate::" vs "<app_name>::"
+
+- Inside the same crate (e.g., within `lib.rs` or its submodules) → use `crate::...`
+- Outside the crate (e.g., `main.rs` or tests accessing `lib.rs`) → use `<app_name>::...`
+- When centralizing modules in lib.rs, you must reference them as `<app_name>::module` in `main.rs`.
+- If there’s no `lib.rs` (only a binary app), `mod xxx` in `main.rs` is enough to include local modules.

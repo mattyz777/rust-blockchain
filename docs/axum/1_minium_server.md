@@ -5,13 +5,15 @@
 # Web Framework
 axum = { version = "0.8.5", features = ["macros"] }
 tokio = { version = "1.47.1", features = ["full"] }
+
+chrono = { version = "0.4.42", features = ["serde"] }
 ```
 
 # main.rs
 
 ```rs
 use axum::{routing::get, Router};
-use std::net::SocketAddr;
+use chrono::{Local, DateTime};
 
 #[tokio::main]
 async fn main() {
@@ -25,8 +27,13 @@ async fn main() {
         .unwrap();
 }
 
-async fn root() -> &'static str {
-    "Hello, World!"
+async fn get_time () -> String {
+    let now: DateTime<Local> = Local::now();
+    now.format("%Y-%m-%d %H:%M:%S,%3f").to_string()
+}
+
+async fn root() -> String {
+    format!("Hello, World! {}", get_time().await)
 }
 ```
 
