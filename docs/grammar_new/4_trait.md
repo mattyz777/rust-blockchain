@@ -164,3 +164,15 @@ enum IP {
     V6 = 6,
 }
 ```
+
+# Clone
+
+When a struct implements the Clone trait using `#[derive(Clone)]`, instance can be duplicated with .clone():
+
+```rs
+#[derive(Clone)]
+struct Person {}
+
+let p = Person {};
+let p_1 = p.clone();
+```

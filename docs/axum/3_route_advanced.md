@@ -36,7 +36,15 @@ serde_json = "1.0.145"
 
 ```
 
-# app_state.rs
+# state.rs
+
+- AppState itself is not inside an Arc.
+  - You derive Clone on AppState, so Axum can clone the struct for each request.
+  - Cloning AppState only clones the struct, the inner db is still shared via Arc.
+- The db field is wrapped in Arc<Mutex<...>>:
+  - Multiple cloned AppState instances share the same db.
+  - Arc ensures thread-safe shared ownership.
+  - Mutex ensures mutable access is safe across threads.
 
 ```rs
 use std::sync::{Arc, Mutex};
@@ -54,6 +62,7 @@ pub struct AppState {
 use axum::{extract::State, Json};
 use serde_json::json;
 use crate::state::AppState;
+use crate::utils::datetime_utils::get_time;
 
 pub async fn root_router(State(_state): State<AppState>) -> Json<serde_json::Value> {
     Json(json!({ "message": "Hello, World!" }))
@@ -61,7 +70,7 @@ pub async fn root_router(State(_state): State<AppState>) -> Json<serde_json::Val
 
 //pub async fn root_router(State(state): State<AppState>) -> String {
 //    format!("Hello, World! {}", get_time().await)
-//
+//}
 ```
 
 # routes/user_routes.rs
@@ -74,7 +83,7 @@ use axum::{
     Router,
     Json,
 };
-use crate::app_state::AppState;
+use crate::state::AppState;
 use crate::dtos::user_dtos::{UserCreateDTO, UserDTO};
 
 pub fn user_router() -> Router<AppState> {
@@ -165,7 +174,6 @@ async fn main() {
         .await
         .unwrap();
 }
-
 ```
 
 # utils/datetime_utils.rs
