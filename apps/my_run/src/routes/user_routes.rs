@@ -13,17 +13,18 @@ pub fn user_router() -> Router<AppState> {
         .route("/", post(create_user))
 }
 
-#[axum::debug_handler]
+#[axum::debug_handler] // important for debugging
 async fn create_user(
     State(state): State<AppState>,
-    Json(user_create_dto): Json<UserCreateDTO>,
+    Json(payload): Json<UserCreateDTO>,
 ) -> (StatusCode, Json<UserDTO>) {
-    let user = UserDTO {
-        name: user_create_dto.name,
+    let mut db = state.db.lock().unwrap();
+
+    let new_user = UserDTO {
+        username: payload.username,
     };
 
-    let mut db = state.db.lock().unwrap();
-    db.push(user.clone());
+    db.push(new_user.clone());
 
-    (StatusCode::CREATED, Json(user))
+    (StatusCode::CREATED, Json(new_user))
 }

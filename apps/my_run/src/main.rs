@@ -1,9 +1,9 @@
-
 use std::sync::{Mutex, Arc};
 use axum::{routing::get, Router};
 use my_run::state::AppState;
-use my_run::routes::user_routes::user_router;
 use my_run::routes::root_routes::root_router;
+use my_run::routes::user_routes::user_router;
+
 
 #[tokio::main]
 async fn main() {
@@ -22,4 +22,3 @@ async fn main() {
         .await
         .unwrap();
 }
-
