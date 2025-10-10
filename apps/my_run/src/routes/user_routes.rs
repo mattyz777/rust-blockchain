@@ -5,24 +5,25 @@ use axum::{
     Router,
     Json,
 };
-use crate::app_state::AppState;
+use crate::state::AppState;
 use crate::dtos::user_dtos::{UserCreateDTO, UserDTO};
 
 pub fn user_router() -> Router<AppState> {
     Router::new()
         .route("/", post(create_user))
 }
+
+#[axum::debug_handler]
 async fn create_user(
     State(state): State<AppState>,
-    Json(payload): Json<UserCreateDTO>,
+    Json(user_create_dto): Json<UserCreateDTO>,
 ) -> (StatusCode, Json<UserDTO>) {
-    let mut db = state.db.lock().unwrap();
-
-    let new_user = UserDTO {
-        username: payload.username,
+    let user = UserDTO {
+        name: user_create_dto.name,
     };
 
-    db.push(new_user.clone());
+    let mut db = state.db.lock().unwrap();
+    db.push(user.clone());
 
-    (StatusCode::CREATED, Json(new_user))
+    (StatusCode::CREATED, Json(user))
 }

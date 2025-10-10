@@ -5,7 +5,7 @@
 └── src
     ├── main.rs
     ├── lib.rs
-    ├── app_state.rs
+    ├── state.rs
     |
     ├── dtos
     │   ├── auth_dtos.rs
@@ -53,7 +53,7 @@ pub struct AppState {
 ```rs
 use axum::{extract::State, Json};
 use serde_json::json;
-use crate::app_state::AppState;
+use crate::state::AppState;
 
 pub async fn root_router(State(_state): State<AppState>) -> Json<serde_json::Value> {
     Json(json!({ "message": "Hello, World!" }))
@@ -81,6 +81,8 @@ pub fn user_router() -> Router<AppState> {
     Router::new()
         .route("/", post(create_user))
 }
+
+#[axum::debug_handler] // important for debugging
 async fn create_user(
     State(state): State<AppState>,
     Json(payload): Json<UserCreateDTO>,
@@ -107,11 +109,18 @@ pub mod root_routes;
 # dtos/user_dtos.rs
 
 ```rs
-#[derive(Debug, Clone)]
+use serde::{Serialize, Deserialize};
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct UserDTO {
-    pub id: u32,
-    pub username: String,
+    pub name: String,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct UserCreateDTO {
+    pub name: String,
+}
+
 ```
 
 # dtos/mod.rs
@@ -123,7 +132,7 @@ pub mod user_dtos;
 # lib.rs
 
 ```rs
-pub mod app_state;
+pub mod state;
 pub mod dtos;
 pub mod routes;
 pub mod utils;
@@ -134,9 +143,9 @@ pub mod utils;
 ```rs
 use std::sync::{Mutex, Arc};
 use axum::{routing::get, Router};
-use my_run_1::app_state::AppState;
-use my_run_1::routes::root_routes::root_router;
-use my_run_1::routes::user_routes::user_router;
+use my_run::state::AppState;
+use my_run::routes::root_routes::root_router;
+use my_run::routes::user_routes::user_router;
 
 
 #[tokio::main]
@@ -159,7 +168,7 @@ async fn main() {
 
 ```
 
-# utils/date_time_utils.rs
+# utils/datetime_utils.rs
 
 ```rs
 use chrono::{DateTime, Local};
@@ -173,5 +182,5 @@ pub async fn get_time() -> String {
 # utils/mod.rs
 
 ```rs
-pub mod date_time_utils;
+pub mod datetime_utils;
 ```
