@@ -1,4 +1,4 @@
-use std::sync::{Mutex, Arc};
+use std::sync::{Arc, Mutex, atomic::AtomicUsize};
 use axum::{routing::get, Router};
 use my_run::state::AppState;
 use my_run::routes::root_routes::root_router;
@@ -8,6 +8,7 @@ use my_run::routes::user_routes::user_router;
 #[tokio::main]
 async fn main() {
     let state = AppState {
+        id: Arc::new(AtomicUsize::new(0)),
         db: Arc::new(Mutex::new(vec![])),
     };
 

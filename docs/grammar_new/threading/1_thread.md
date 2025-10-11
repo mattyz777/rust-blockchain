@@ -70,8 +70,49 @@ fn main() {
         worker(name, 2)  // name is moved here
     });
 
+    // name can't be used here — ownership moved into the thread
+
     let result = t.join().unwrap();
     println!("Thread returned: {}", result);
+}
+```
+
+# thread scope
+
+- local variables will be auto referenced in `thread::scope`, so that no need `move` or `'static`
+- `thread::scope` is synchronous at the outer level
+- All threads inside the scope run concurrently
+- data in thread cannot be mutated
+
+```rs
+use std::thread;
+use std::time::Duration;
+
+fn main() {
+    let data = vec![1, 2, 3];
+    // let mut data = vec![1, 2, 3]; // data cannot
+
+    // 1. thread::scope is synchronous at the outer level
+    thread::scope(|s| {
+        s.spawn(|| {   // 2. All threads inside the scope run concurrently
+            println!("Thread 1 starting...");
+            thread::sleep(Duration::from_secs(2));
+            println!("{}", numbers.len());
+            println!("Thread 1 done");
+        });
+
+        s.spawn(|| {   // 2. All threads inside the scope run concurrently
+            println!("Thread 2 starting...");
+            thread::sleep(Duration::from_secs(1));
+            for n in &numbers {
+                println!("{}", n);
+            }
+            println!("Thread 2 done");
+        });
+
+        println!("Inside scope: all threads started"); // 3. all threads are finished, data still valid
+    });
+    // <---- only reached after all threads inside scope finish
 }
 ```
 
