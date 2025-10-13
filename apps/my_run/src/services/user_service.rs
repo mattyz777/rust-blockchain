@@ -1,6 +1,6 @@
 use crate::dtos::user_dtos::{UserCreateDTO, UserDTO};
-use sea_orm::{ActiveModelTrait, Set, DatabaseConnection};
-use crate::models::user_model::{ActiveModel as UserActiveModel, Model as UserModel};
+use sea_orm::{ActiveModelTrait, ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Set};
+use crate::models::user_model::{ActiveModel as UserActiveModel, Column, Entity as UserEntity, Model as UserModel};
 use chrono::Utc;
 
 pub struct UserService;
@@ -14,10 +14,20 @@ impl UserService {
             password: Set(hashed_password),
             created_at: Set(Utc::now()),
             updated_at: Set(Some(Utc::now())),
-            ..Default::default()
+            ..Default::default() // id: NotSet, is_deleted: NotSet
         };
 
         let inserted: UserModel = new_user.insert(db).await?;
         Ok(UserDTO::from(inserted))
+        // Ok(inserted.into())
+    }
+
+    pub async fn get_users(db: &DatabaseConnection) -> anyhow::Result<Vec<UserDTO>> {
+        let users: Vec<UserModel> = UserEntity::find()
+            .filter(Column::IsDeleted.eq(false)) // Requires `use ColumnTrait`
+            .all(db)
+            .await?;
+
+        Ok(users.into_iter().map(Into::into).collect())
     }
 }

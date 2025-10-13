@@ -14,8 +14,7 @@ use crate::{
 
 pub fn user_router() -> Router<AppState> {
     Router::new()
-        .route("/", post(create_user))
-        // .route("/", post(create_user).get(get_users))
+        .route("/", post(create_user).get(get_users))
         // .route("/{id}", delete(delete_user).get(get_user))
 }
 
@@ -31,17 +30,15 @@ async fn create_user(
     }
 }
 
-// #[axum::debug_handler]
-// async fn get_users(
-//     State(state): State<AppState>,
-//     Json(payload): Json<UserCreateDTO>,
-// ) -> (StatusCode, Json<Vec<UserDTO>>) {
-//     // let db = state.db.lock().unwrap();
-
-//     // let users = db.clone();
-
-//     (StatusCode::OK, Json(users))
-// }
+#[axum::debug_handler]
+async fn get_users(
+    State(state): State<AppState>,
+) -> (StatusCode, Json<ApiResponse<Vec<UserDTO>>>) {
+    match UserService::get_users(&state.db).await {
+        Ok(users) => ApiResponse::success(Some(users)),
+        Err(err) => ApiResponse::error(1001, &format!("failed to get users: {}", err)),
+    }
+}
 
 // #[axum::debug_handler]
 // async fn get_user(

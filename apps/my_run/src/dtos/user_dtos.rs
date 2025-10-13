@@ -11,7 +11,6 @@ pub struct UserDTO {
     pub updated_at: Option<DateTime<Utc>>,
 }
 
-// todo
 impl From<UserModel> for UserDTO {
     fn from(model: UserModel) -> Self {
         Self {
