@@ -6,11 +6,6 @@ use chrono::Utc;
 pub struct UserService;
 
 impl UserService {
-    pub fn new() -> Self {
-        UserService {}
-    }
-
-    // todo
     pub async fn create_user(db: &DatabaseConnection, dto: UserCreateDTO) -> anyhow::Result<UserDTO> {
         let hashed_password = bcrypt::hash(&dto.password, bcrypt::DEFAULT_COST)?;
 

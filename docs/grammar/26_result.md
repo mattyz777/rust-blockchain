@@ -24,9 +24,8 @@ fn main() {
 
 # Result & ?
 
-- The ? operator only works on a Result (or Option).
+- The ? operator can only be used inside a function that returns a Result (or Option).
 - It unwraps Ok(value) and returns the value, or returns early if it’s an Err.
-- It does not care about .await at all.
 
 ```rs
 fn divide(a: f64, b: f64) -> Result<f64, String> {
@@ -44,6 +43,15 @@ fn calculate(a: f64, b: f64, c: f64) -> Result<f64, String> {
     let result2 = divide(result1, c)?;
     Ok(result2)
 }
+```
+
+# Result unwrap
+
+- bcrypt::hash returns Result and use unwrap to extract OK value.
+
+```rs
+let hashed_password = bcrypt::hash("123", bcrypt::DEFAULT_COST).unwrap();
+println!("{}", hashed_password);
 ```
 
 # Result & Match

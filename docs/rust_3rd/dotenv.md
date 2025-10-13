@@ -25,10 +25,11 @@ dotenvy = "0.15.0"
 
 ```rs
 use dotenvy::dotenv;
+use std::env::var;
 
 fn main() {
     dotenv().ok(); // load .env file
-    let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set");
+    let database_url = var("DATABASE_URL").expect("DATABASE_URL must be set");
 
     println!("Hello, world! {}", database_url);
 }
