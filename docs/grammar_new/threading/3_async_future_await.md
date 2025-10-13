@@ -6,15 +6,16 @@
 
 # async
 
-- async is used in async fn or async { ... } blocks
-- Calling an async fn immediately returns this Future without running the code inside.
-
 ```rs
-async fn get_data() -> String {
-    "Hello".to_string()
+async fn get_number() -> u32 {
+    42
 }
 
-let my_future = get_data();  // my_future is a lazy Future<Output = String>.
+async fn run() {
+    let future = get_number();        // Future<Output = u32>
+    // Because get_number() never fails and its return type is u32, there’s no need for Result & ?.
+    let result: u32 = future.await;   // `.await` returns 42
+}
 ```
 
 # Future
@@ -30,11 +31,16 @@ let my_future = get_data();  // my_future is a lazy Future<Output = String>.
 # example
 
 ```rs
-async fn run_and_await() -> u32 {
-    let some_num_future = async { 42 }; // This is a Future<Output = u32>
+async fn a() -> String {
+    "Hello".to_string()
+}
 
-    // .await consumes the Future and returns the u32 value (42)
-    let result: u32 = some_num_future.await; // <-- Execution can pause here
+async fn run_and_await() -> u32 {
+    let a_future = a();               // This is a Future<Output = String>
+    let b_future = async { 42 };      // This is a Future<Output = u32>
+
+    let result: u32 = a_future.await; // <-- Execution pauses here
+    let result: u32 = b_future.await; // <-- Execution pauses here
 
     result
 }

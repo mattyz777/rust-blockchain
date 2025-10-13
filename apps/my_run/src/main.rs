@@ -1,15 +1,21 @@
-use std::sync::{Arc, Mutex, atomic::AtomicUsize};
+use std::sync::Arc;
 use axum::{routing::get, Router};
+use dotenv::dotenv;
+use sea_orm::Database;
+use std::env;
 use my_run::state::AppState;
 use my_run::routes::root_routes::root_router;
 use my_run::routes::user_routes::user_router;
 
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    // todo
+    dotenv().ok();
+    let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set in .env");
+
     let state = AppState {
-        id: Arc::new(AtomicUsize::new(0)),
-        db: Arc::new(Mutex::new(vec![])),
+        db: Arc::new(Database::connect(database_url).await?),
     };
 
     let app = Router::new()
@@ -22,4 +28,5 @@ async fn main() {
     axum::serve(listener, app)
         .await
         .unwrap();
+    Ok(())
 }

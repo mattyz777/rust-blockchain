@@ -1,12 +1,7 @@
-use std::sync::{
-    Arc,
-    Mutex,
-    atomic::{AtomicUsize},
-};
-use crate::dtos::user_dtos::UserDTO;
+use std::sync::Arc;
+use sea_orm::DatabaseConnection;
 
 #[derive(Clone)]
 pub struct AppState {
-    pub db: Arc<Mutex<Vec<UserDTO>>>,
-    pub id: Arc<AtomicUsize>,
+    pub db: Arc<DatabaseConnection>,
 }

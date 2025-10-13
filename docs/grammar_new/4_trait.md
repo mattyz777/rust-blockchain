@@ -176,3 +176,23 @@ struct Person {}
 let p = Person {};
 let p_1 = p.clone();
 ```
+
+# Trait
+
+Create a "default value" for a type.
+
+```rs
+let x = i32::default();        // 0
+let flag = bool::default();    // false
+let s = String::default();     // ""
+let v = Vec::default();        // []
+let opt = Option::default();   // None
+
+#[derive(Debug, Default)]
+struct User {
+    id: u32,
+    is_active: bool,
+}
+
+User::default();               // struct: User { id: 0, is_active: false }
+```

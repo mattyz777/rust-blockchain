@@ -90,3 +90,20 @@ let x = 10;
 let x = x + 1; // 11
 let x = "a"; // string literal
 ```
+
+# default
+
+| Type                             | `Default::default()` value                       |
+| -------------------------------- | ------------------------------------------------ |
+| `i32`, `usize`, `u32`, etc.      | `0`                                              |
+| `bool`                           | `false`                                          |
+| `String`                         | `""` (empty string)                              |
+| `Vec<T>`                         | `vec![]` (empty vector)                          |
+| `Option<T>`                      | `None`                                           |
+| Struct with `#[derive(Default)]` | Each field is set to its own default recursively |
+
+| Chrono Type             | Default Value          | Notes                           |
+| ----------------------- | ---------------------- | ------------------------------- |
+| `NaiveDateTime`         | `0000-01-01 00:00:00`  | “Zero” date                     |
+| `DateTime<Utc>`         | `0000-01-01T00:00:00Z` | Zero date in UTC                |
+| `Option<NaiveDateTime>` | `None`                 | Perfect for nullable DB columns |
