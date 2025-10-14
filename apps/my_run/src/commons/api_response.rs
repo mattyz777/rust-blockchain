@@ -14,7 +14,7 @@ impl<T> ApiResponse<T> where T:Serialize {
         (
             StatusCode::OK,
             Json(ApiResponse{
-                code: 0,
+                code: 1,
                 data,
                 message: None,
             })

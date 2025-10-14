@@ -1,13 +1,14 @@
 use axum::{
     extract::State,
     http::StatusCode,
-    routing::post,
+    extract::Path,
+    routing::{delete, post},
     Router,
     Json,
 };
 use crate::{
     state::AppState,
-    dtos::user_dtos::{UserCreateDTO, UserDTO},
+    dtos::user_dtos::{UserCreateDTO, UserUpdateDTO, UserDTO},
     services::user_service::UserService,
     commons::api_response::ApiResponse,
 };
@@ -15,7 +16,7 @@ use crate::{
 pub fn user_router() -> Router<AppState> {
     Router::new()
         .route("/", post(create_user).get(get_users))
-        // .route("/{id}", delete(delete_user).get(get_user))
+        .route("/{id}", delete(delete_user).get(get_user).put(update_user))
 }
 
 
@@ -30,6 +31,8 @@ async fn create_user(
     }
 }
 
+
+
 #[axum::debug_handler]
 async fn get_users(
     State(state): State<AppState>,
@@ -40,33 +43,42 @@ async fn get_users(
     }
 }
 
-// #[axum::debug_handler]
-// async fn get_user(
-//     State(state): State<AppState>,
-//     Path(id): Path<usize>,
-// ) -> (StatusCode, Json<Option<UserDTO>>) {
-//     // let db = state.db.lock().unwrap();
-//     // let user = db.iter().find(|user| user.id == id).cloned();
 
-//     // match user {
-//     //     Some(user) => (StatusCode::OK, Json(Some(user))),
-//     //     None => (StatusCode::OK, Json(None)),
-//     // }
-//     (StatusCode::OK, Json(None))
-// }
 
-// #[axum::debug_handler]
-// async fn delete_user(
-//     State(state): State<AppState>,
-//     Path(id): Path<usize>,
-// ) -> (StatusCode, Json<Option<UserDTO>>) {
-//     // let mut db = state.db.lock().unwrap();
+#[axum::debug_handler]
+async fn get_user(
+    State(state): State<AppState>,
+    Path(id): Path<i32>,
+) -> (StatusCode, Json<ApiResponse<UserDTO>>) {
+    match UserService::get_user(&state.db, id).await {
+        Ok(user) => ApiResponse::success(user),
+        Err(err) => ApiResponse::error(1001, &format!("failed to get user: {}", err)),
+    }
+}
 
-//     // if let Some(index) = db.iter().position(|user| user.id == id) {
-//     //     let removed_user = db.remove(index);
-//     //     (StatusCode::OK, Json(Some(removed_user)))
-//     // } else {
-//     //     (StatusCode::OK, Json(None))
-//     // }
-//     (StatusCode::OK, Json(None))
-// }
+
+
+#[axum::debug_handler]
+async fn delete_user(
+    State(state): State<AppState>,
+    Path(id): Path<i32>,
+) -> (StatusCode, Json<ApiResponse<()>>) {
+    match UserService::delete_user(&state.db, id).await {
+        Ok(_) => ApiResponse::success(None),
+        Err(err) => ApiResponse::error(1001, &format!("failed to delete user: {}", err)),
+    }
+}
+
+
+
+#[axum::debug_handler]
+async fn update_user(
+    State(state): State<AppState>,
+    Path(id): Path<i32>,
+    Json(payload): Json<UserUpdateDTO>,
+) -> (StatusCode, Json<ApiResponse<()>>) {
+    match UserService::update_user(&state.db, id, payload).await {
+        Ok(_) => ApiResponse::success(None),
+        Err(err) => ApiResponse::error(1001, &format!("failed to update user: {}", err)),
+    }
+}

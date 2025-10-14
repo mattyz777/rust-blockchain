@@ -27,3 +27,9 @@ pub struct UserCreateDTO {
     pub username: String,
     pub password: String,
 }
+
+#[derive(Clone, Deserialize)]
+pub struct UserUpdateDTO {
+    pub username: String,
+    pub password: String,
+}
