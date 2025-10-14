@@ -1,11 +1,12 @@
 use axum::{
-    extract::State,
+    extract::{Multipart, State},
     http::StatusCode,
     extract::Path,
     routing::{delete, post},
     Router,
     Json,
 };
+
 use crate::{
     state::AppState,
     dtos::user_dtos::{UserCreateDTO, UserUpdateDTO, UserDTO},
@@ -17,6 +18,7 @@ pub fn user_router() -> Router<AppState> {
     Router::new()
         .route("/", post(create_user).get(get_users))
         .route("/{id}", delete(delete_user).get(get_user).put(update_user))
+        .route("/upload", post(upload_file))
 }
 
 
@@ -80,5 +82,17 @@ async fn update_user(
     match UserService::update_user(&state.db, id, payload).await {
         Ok(_) => ApiResponse::success(None),
         Err(err) => ApiResponse::error(1001, &format!("failed to update user: {}", err)),
+    }
+}
+
+
+
+#[axum::debug_handler]
+pub async fn upload_file(
+    multipart: Multipart,
+) -> (StatusCode, Json<ApiResponse<()>>) {
+    match UserService::upload_file(multipart).await {
+        Ok(_) => ApiResponse::success(None),
+        Err(err) => ApiResponse::error(1001, &format!("failed to upload file: {}", err)),
     }
 }

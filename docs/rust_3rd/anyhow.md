@@ -8,7 +8,7 @@ cargo install anyhow
 
 - The ? operator can only be used inside a function that returns a Result (or Option).
 - The ? operator automatically converts the error into anyhow::Error (via From) and returns it.
-- It needs explicitly return Err(...) if a custom error message is needed.
+- Explicitly return Err(...) if a custom error message is needed.
 
 ```rs
 use anyhow::{Result, Context};

@@ -2,7 +2,6 @@ use std::sync::Arc;
 use axum::{routing::get, Router};
 use dotenvy::dotenv;
 use sea_orm::Database;
-use std::env::var;
 use my_run::state::AppState;
 use my_run::routes::root_routes::root_router;
 use my_run::routes::user_routes::user_router;
@@ -11,7 +10,7 @@ use my_run::routes::user_routes::user_router;
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenv().ok();
-    let database_url = var("DATABASE_URL").expect("DATABASE_URL must be set in .env");
+    let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set in .env");
 
     let state = AppState {
         db: Arc::new(Database::connect(database_url).await?),

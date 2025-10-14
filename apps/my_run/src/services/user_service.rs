@@ -3,6 +3,12 @@ use sea_orm::{ActiveModelTrait, ColumnTrait, ConnectionTrait, DatabaseConnection
 use crate::models::user_model::{ActiveModel as UserActiveModel, Column, Entity as UserEntity, Model as UserModel};
 use chrono::Utc;
 
+use bytes::Bytes;
+use std::fs::File;
+use std::io::Write;
+use std::path::{Path, PathBuf};
+use axum::extract::Multipart;
+
 pub struct UserService;
 
 impl UserService {
@@ -55,7 +61,7 @@ impl UserService {
         if let Some(user) = query.one(db).await? {
             let sql = UserEntity::delete_many()
                 .filter(Column::Id.eq(user.id))
-                
+
                 .filter(Column::IsDeleted.eq(false))
                 .build(db.get_database_backend())
                 .to_string();
@@ -85,6 +91,36 @@ impl UserService {
             println!("update_user UPDATE SQL: {}", update_sql);
 
             active_model.update(db).await?;
+        }
+
+        Ok(None)
+    }
+
+
+    pub async fn upload_file(mut multipart: Multipart) ->  anyhow::Result<Option<()>> {
+        let upload_path = std::env::var("UPLOAD_PATH").expect("UPLOAD_PATH must be set in .env");
+        println!("upload_file UPLOAD_PATH: {}", upload_path);
+
+        let upload_dir = Path::new(&upload_path);
+        println!("upload_file upload_dir: {}", upload_dir.display());
+        
+        std::fs::create_dir_all(upload_dir)?;
+
+        while let Some(field) = multipart.next_field().await? {
+            let file_name = field
+                .file_name()
+                .map(|s| s.to_string())
+                .unwrap_or_else(|| "file".to_string());
+
+            let data: Bytes = field.bytes().await?;
+
+            let mut path = PathBuf::from(upload_dir);
+            path.push(&file_name);
+
+            let mut file = File::create(&path)?;
+            file.write_all(&data)?;
+
+            println!("Uploaded file saved to: {}", path.display());
         }
 
         Ok(None)

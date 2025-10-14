@@ -5,7 +5,7 @@ edition = "2024"
 
 [dependencies]
 # Web Framework
-axum = { version = "0.8.5", features = ["macros"] }
+axum = { version = "0.8.6", features = ["macros", "multipart"] }
 tokio = { version = "1.47.1", features = ["full"] }
 
 serde = { version = "1.0.228", features = ["derive"] }
@@ -22,7 +22,8 @@ dotenvy = "0.15.7"
 # Database
 sea-orm = { version = "1.1.17", features = ["sqlx-postgres", "runtime-tokio-native-tls", "macros"] }
 
-
+# For multipart/form-data and file bytes
+bytes = "1.10.1"
 
 
 
