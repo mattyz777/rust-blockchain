@@ -53,6 +53,8 @@ impl UserService {
         Ok(user.map(Into::into)) // user.map(|model| model.into())
     }
 
+    // search with pagination
+
     pub async fn delete_user(db: &DatabaseConnection, id: i32) -> anyhow::Result<Option<()>> {
         let query = UserEntity::find()
             .filter(Column::Id.eq(id))
@@ -103,7 +105,7 @@ impl UserService {
 
         let upload_dir = Path::new(&upload_path);
         println!("upload_file upload_dir: {}", upload_dir.display());
-        
+
         std::fs::create_dir_all(upload_dir)?;
 
         while let Some(field) = multipart.next_field().await? {
@@ -113,7 +115,8 @@ impl UserService {
                 .unwrap_or_else(|| "file".to_string());
 
             let data: Bytes = field.bytes().await?;
-
+            
+            // merge file path and file name
             let mut path = PathBuf::from(upload_dir);
             path.push(&file_name);
 
@@ -125,4 +128,7 @@ impl UserService {
 
         Ok(None)
     }
+
+    // download
+    // search with pagination
 }

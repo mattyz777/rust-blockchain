@@ -1,7 +1,11 @@
 # Result
 
-- Result is a system defined enum providing Ok and Err variant.
-- `Result<i32, String>` firs parameter is Ok variant, second is Err variant.
+- The `?` operator can only be used inside functions that return a `Result` or `anyhow::Result`.
+- If you call a function that returns a `Result` or `anyhow::Result` without using `?`, the error will be ignored (thrown away) unless you explicitly handle it.
+- Use `.unwrap()` or `?` to extract the value from a Result.
+- When a function returns `Result<T, E>`, returning a plain value of type `T` will be automatically wrapped as `Ok(T)`.
+- Use `Err("...")` or `Err(anyhow!("..."))` when using anyhow to return an error.
+- Use `match` to handle `Result` or custom errors explicitly.
 
 # Result returns early
 
@@ -22,26 +26,26 @@ fn main() {
 }
 ```
 
-# Result & ?
+# ？ vs unwrap
 
-- The ? operator can only be used inside a function that returns a Result (or Option).
-- It unwraps Ok(value) and returns the value, or returns early if it’s an Err.
+- `?`: When encountering an `Err`, it returns early from the current function and propagates the error upward. It does not panic.
+- `unwrap`: When encountering an `Err`, it panics immediately. Suitable for prototyping, testing, or when you are certain the `Result` is `Ok`.
 
 ```rs
-fn divide(a: f64, b: f64) -> Result<f64, String> {
-    if b == 0.0 {
-        Err("Cannot divide by zero".to_string())
-    } else {
-        Ok(a / b)
-    }
+use anyhow::Result;
+
+pub fn caller() -> Result<String> {
+    // Calling without `?` ignores the error:
+    let _ = worker(); // error is thrown away
+
+    // Using `?` will propagate the error early:
+    let val = worker()?; // if Err, caller() returns early with the error
+
+    Ok(format!("Success: {}", val))
 }
 
-fn calculate(a: f64, b: f64, c: f64) -> Result<f64, String> {
-    // if OK => result1 is f64 value
-    // if Err => directly returns Err
-    let result1 = divide(a, b)?;
-    let result2 = divide(result1, c)?;
-    Ok(result2)
+pub fn worker() -> Result<String> {
+    Err(anyhow::anyhow!("worker error"))
 }
 ```
 
