@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use crate::models::user_model::Model as UserModel;
+use crate::utils::serde_date::deserialize_option_yyyy_mm_dd;
 use chrono::{DateTime, Utc};
 
 #[derive(Clone, Serialize)]
@@ -10,6 +11,8 @@ pub struct UserDTO {
     pub created_at: DateTime<Utc>,
     pub updated_at: Option<DateTime<Utc>>,
 }
+
+
 
 impl From<UserModel> for UserDTO {
     fn from(model: UserModel) -> Self {
@@ -32,4 +35,15 @@ pub struct UserCreateDTO {
 pub struct UserUpdateDTO {
     pub username: String,
     pub password: String,
+}
+
+#[derive(Clone, Deserialize)]
+pub struct UserQueryDTO {
+    pub username: String,
+    
+    #[serde(default, deserialize_with = "deserialize_option_yyyy_mm_dd")]
+    pub created_before: Option<DateTime<Utc>>,
+    
+    #[serde(default, deserialize_with = "deserialize_option_yyyy_mm_dd")]
+    pub created_after: Option<DateTime<Utc>>,
 }

@@ -1,4 +1,3 @@
-pub mod commons;
 pub mod dtos;
 pub mod routes;
 pub mod utils;

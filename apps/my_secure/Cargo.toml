@@ -5,6 +5,4 @@ edition = "2024"
 
 [dependencies]
 anyhow="1.0.100"
-rand="0.9.2"          # 仅用来打印 key/nonce 用 hex
-aes-gcm="0.10.3"    # AES-256-GCM         
-hex="0.4.3"
+serde="1.0.10"

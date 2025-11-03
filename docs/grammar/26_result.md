@@ -49,15 +49,6 @@ pub fn worker() -> Result<String> {
 }
 ```
 
-# Result unwrap
-
-- bcrypt::hash returns Result and use unwrap to extract OK value.
-
-```rs
-let hashed_password = bcrypt::hash("123", bcrypt::DEFAULT_COST).unwrap();
-println!("{}", hashed_password);
-```
-
 # Result & Match
 
 ```rs

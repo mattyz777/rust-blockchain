@@ -177,7 +177,7 @@ let p = Person {};
 let p_1 = p.clone();
 ```
 
-# Trait
+# Default
 
 Create a "default value" for a type.
 

@@ -45,3 +45,59 @@ pub fn hello() {}
 
 - one package could have 0-1 library crate
 - one package could have 0-many binary crates
+
+# crate-level attribute
+
+- `#![attribute_name(arguments)]`
+- `#![no_std]` the crate should not link the standard library (std), making it suitable for embedded systems or operating system kernels.
+
+# crate-level attribute - cfg
+
+The crate-level `cfg` attribute (`#![cfg(condition)`) is used for conditional compilation
+
+```rs
+// This module is only included if the target OS is Linux.
+#[cfg(target_os = "linux")]
+pub mod linux_networking;
+
+// This module is only included if the target OS is Windows.
+#[cfg(target_os = "windows")]
+pub mod windows_networking;
+```
+
+```bash
+cargo build --target x86_64-pc-windows-msvc
+```
+
+# custom feature
+
+```toml
+# Cargo.toml
+
+[features]
+abc = []
+```
+
+```rs
+#[cfg(feature = "abc")]          // Compile-Time Filter, if the abc feature is not enabled when compiling, the Rust compiler (rustc) will completely remove the run_special_feature function
+pub fn run_special_feature() {
+    println!("The custom 'abc' feature is enabled!");
+}
+
+pub fn main() {
+    if cfg!(feature = "abc") {   // Compile-Time Value Injection,
+                                 // If it is enabled: `if cfg!(feature = "abc")` becomes `if true`.
+                                 // Esle, `if false`.
+        run_special_feature();
+    } else {
+        println!("The custom 'abc' feature is NOT enabled.");
+    }
+}
+```
+
+```bash
+carog build                      # false
+cargo build --features **abc**   # true
+cargo build --all-features       # true
+cargo test --features **abc**    # true
+```

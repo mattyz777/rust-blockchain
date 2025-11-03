@@ -1,6 +1,7 @@
-use crate::dtos::user_dtos::{UserCreateDTO, UserUpdateDTO, UserDTO};
-use sea_orm::{ActiveModelTrait, ColumnTrait, ConnectionTrait, DatabaseConnection, EntityTrait, IntoActiveModel, QueryFilter, QueryTrait, Set};
+use crate::dtos::user_dtos::{UserCreateDTO, UserQueryDTO, UserUpdateDTO, UserDTO};
+use sea_orm::{ActiveModelTrait, ColumnTrait, ConnectionTrait, DatabaseConnection, EntityTrait, IntoActiveModel, PaginatorTrait, QueryFilter, QuerySelect, QueryTrait, Set};
 use crate::models::user_model::{ActiveModel as UserActiveModel, Column, Entity as UserEntity, Model as UserModel};
+use crate::dtos::paging_dtos::{PagingDto, PagingQueryDTO};
 use chrono::Utc;
 
 use bytes::Bytes;
@@ -129,6 +130,56 @@ impl UserService {
         Ok(None)
     }
 
+
+
+    pub async fn query_users(
+        db: &DatabaseConnection,
+        dto: PagingQueryDTO<UserQueryDTO>,
+    ) -> anyhow::Result<PagingDto<UserDTO>> {
+        let page = dto.get_page();
+        let page_size = dto.get_page_size();
+        let offset = (page - 1) * page_size;
+
+        let mut query = UserEntity::find().filter(Column::IsDeleted.eq(false));
+
+        if let Some(ref filter) = dto.data {
+            if !filter.username.is_empty() {
+                query = query.filter(Column::Username.contains(&filter.username));
+            }
+            if let Some(created_before) = filter.created_before {
+                query = query.filter(Column::CreatedAt.lt(created_before));
+            }
+            if let Some(created_after) = filter.created_after {
+                query = query.filter(Column::CreatedAt.gt(created_after));
+            }
+        }
+
+        let count_query = query.clone();
+
+        let count_sql = count_query
+            .clone()
+            .build(db.get_database_backend())
+            .to_string();
+        println!("\n[SQL COUNT] {}", count_sql);
+
+        let total_count = count_query.count(db).await? as u32;
+
+        query = query.offset(offset as u64).limit(page_size as u64);
+
+        let final_sql = query
+            .clone()
+            .build(db.get_database_backend())
+            .to_string();
+        println!("[SQL PAGE] {}\n", final_sql);
+
+        let users: Vec<UserModel> = query.all(db).await?;
+
+        let user_dtos = users.into_iter().map(Into::into).collect();
+
+        Ok(PagingDto::new(user_dtos, page, total_count, page_size))
+    }
+
+
+
     // download
-    // search with pagination
 }
