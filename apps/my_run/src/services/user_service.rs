@@ -143,14 +143,14 @@ impl UserService {
         let mut query = UserEntity::find().filter(Column::IsDeleted.eq(false));
 
         if let Some(ref filter) = dto.data {
-            if !filter.username.is_empty() {
-                query = query.filter(Column::Username.contains(&filter.username));
+            if let Some(ref username) = filter.username {
+                query = query.filter(Column::Username.contains(username));
             }
             if let Some(created_before) = filter.created_before {
-                query = query.filter(Column::CreatedAt.lt(created_before));
+                query = query.filter(Column::CreatedAt.gt(created_before));
             }
             if let Some(created_after) = filter.created_after {
-                query = query.filter(Column::CreatedAt.gt(created_after));
+                query = query.filter(Column::CreatedAt.lt(created_after));
             }
         }
 

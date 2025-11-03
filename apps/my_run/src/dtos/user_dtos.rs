@@ -39,7 +39,7 @@ pub struct UserUpdateDTO {
 
 #[derive(Clone, Deserialize)]
 pub struct UserQueryDTO {
-    pub username: String,
+    pub username: Option<String>,
     
     #[serde(default, deserialize_with = "deserialize_option_yyyy_mm_dd")]
     pub created_before: Option<DateTime<Utc>>,
